@@ -1,7 +1,22 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1 class="page-header">Lab 5 Starter Code</h1>
-<p class="lead">Use this starter template for Lab 5<br/>
-All you get are these files and mostly barebones HTML/CSS files.</p>
+
+<div id="home-page-container" class="d-flex">
+    <section class="section1">
+        <div class="site-info">
+            <h1>Buy and sell cars online</h1>
+            <p>United auto sales provides the fastest, </p>
+        </div>
+        <div class="user-auth d-flex">
+            <button class="btn">Login</button>
+            <button class="btn ml-3">Register</button>
+        </div>
+    </section>
+    <section class="section2">
+        <img src="../static/imgs/display_car.jpg" alt="A beautiful car">
+    </section>
+</div>
+
 {% endblock %}
+
