@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="explore">
+    <h2>Explore</h2>
+    <form class="form-inline d-flex justify-content-center align-items-center">
+      <label class="sr-only" for="search-bar-container">Search</label>
+      <div class="form-group mb-2 d-flex flex-row justify-content-end search-bar-container" name="search-bar-container">
+        <div class="make-component d-flex flex-column justify-content-start">
+            <label class="make-label" for="search-make">Make</label>
+            <input type="search" name="search-make" v-model="searchTerm" id="search-make" class="form-control mb-2 mr-sm-2" placeholder="" />
+        </div>
+        <div class="model-component">
+            <label class="model-label" for="search-model">Model</label>
+            <input type="search" name="search-model" v-model="searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
+        </div>
+        <button class="btn search-btn align-self-end mb-2" @click="searchexplore">Search</button> 
+      </div>
+    </form>
+
+    <div class="cars">
+        {% for i in range(3) %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card h-100">
+                        {# <img src="{{ url_for('getImage', filename=_property.photo_name) }}" class="card-img-top" alt="{{ _property.photo_name }}"> #}
+                        Image
+                        <div class="card-body">
+                            <h5 class="card-title px-1 ml-1">Year & Make</h5>
+                            <p class="card-text text-muted md-bold">
+                                {# <img src='../static/icons/location.svg' alt='location icon' id='location-icon-all' class='icon' /> #}
+                                Model
+                            </p>
+                            <div class="badge badge-pill bg-warning px-4 py-2 text-light md-bold ml-1">Price Tag</div>
+                        </div>
+                        <div class="card-footer text-center bg-info">
+                            {# <a href="{{ url_for('propertyid', pid=_property.id) }}" class="btn btn-info font-weight-bold">View Property</a> #}
+                            View more details
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock%}

@@ -8,8 +8,8 @@ This file creates your application.
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm
-from app.models import UserProfile
+from app.forms import *
+from app.models import *
 from werkzeug.security import check_password_hash
 
 
@@ -41,11 +41,11 @@ def add_car():
     """Render a page on our website that only logged in users can access."""
     return render_template('secure_page.html')
 
-@app.route('/secure-page')
+@app.route('/explore')
 @login_required
 def explore():
     """Render a page on our website that only logged in users can access."""
-    return render_template('secure_page.html')
+    return render_template('explore.html')
 
 @app.route('/secure-page')
 @login_required
@@ -53,32 +53,32 @@ def my_profile():
     """Render a page on our website that only logged in users can access."""
     return render_template('secure_page.html')
 
-@app.route("/secure-page", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('secure_page'))
 
-    form = RegisterForm()
+    form = RegistrationForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            # Get the username and password values from the form.
-            username = request.form['username']
-            password = request.form['password']
+            # # Get the username and password values from the form.
+            # username = request.form['username']
+            # password = request.form['password']
 
-            # query database for a user based on the username
-            user = UserProfile.query.filter_by(username=username).first()
-            # validate the password and ensure that a user was found
-            if user is None:
+            # # query database for a user based on the username
+            # user = UserProfile.query.filter_by(username=username).first()
+            # # validate the password and ensure that a user was found
+            # if user is None:
 
-                """Add new user to database here"""
+            #     """Add new user to database here"""
 
-                login_user(user)    # load into session
-                flash('Registered successfully.', 'success') # flash a message to the user
-                return redirect(url_for("secure_page"))  # redirect to a secure-page route
-            else:
-                flash('Username or Password is incorrect.', 'danger')
+            #     login_user(user)    # load into session
+            flash('Registered successfully.', 'success') # flash a message to the user
+            return redirect(url_for("secure_page"))  # redirect to a secure-page route
+            # else:
+                #     flash('Username or Password is incorrect.', 'danger')
     flash_errors(form)
-    return render_template("login.html", form=form)
+    return render_template("registration_form.html", form=form)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

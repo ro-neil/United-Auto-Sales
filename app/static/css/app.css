@@ -9,7 +9,7 @@ body {
 }
 
 .section2{
-    height: 85vh;
+    height: 88vh;
     width: 80%;
 }
 
@@ -18,3 +18,109 @@ body {
     height: 100%;
 }
 
+label{
+    font-weight: bold;
+}
+
+input[type='text'], select, textarea{
+    color:#39393a;
+    font-weight: 500;
+    border-radius: 5px;
+    padding:10px;
+    border:1px solid rgba(57, 57, 58, 0.1);
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.03);
+    border-radius: 4px;
+}
+
+input[type='file'] {
+    font-weight: 500;
+}
+input:focus, select:focus, textarea:focus{
+    outline-style:solid;
+    outline-width: 5px;
+    outline-color: rgba(255, 133, 82, 0.1);
+}
+input[type='text']{
+    height: 38px;
+}
+input:valid, textarea:valid, select:valid{
+    box-shadow: 0 0 2px rgba(80, 174, 160,0.3);
+    background-color:rgba(80, 174, 160,0.1);
+}
+select{
+    background-color:white;
+}
+.badge-pill:hover{
+    font-size: 1.06rem;
+}
+textarea{
+    resize: vertical;
+    height:75px;
+}
+
+.form-group textarea, .form-group select{
+    border:1px solid rgba(57, 57, 58, 0.1);
+}
+#submit-button{
+    margin-top: 30px;
+    background-color:#297373;
+    color:#e6e6e6;
+    font-weight: 500;
+}
+
+#submit-button:hover{
+    background-color:#39393a;
+}
+
+#registration-form{
+    padding: 1.5rem 8rem 1.5rem 1.5rem;
+    margin-bottom:1rem;
+    background-color:#fff;
+    border-radius: 5px;
+}
+
+.form-row .sm-padding-right{
+    border-right: 2rem solid white;
+}
+
+.cars{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.card img{
+    height: 280px;
+    max-height: 100%;
+}
+
+.card .icon{
+    width: 1.75rem;
+    height: 1.5rem;
+    padding-bottom: .125rem;
+}
+
+.view-car{
+    display: flex;
+    flex-direction: row;
+}
+
+.price-type{
+    display: flex;
+    flex-direction:row;
+    gap: 1rem;
+}
+
+#view-car-img{
+    height: 25rem;
+}
+
+.flash-msgs{
+    padding-top:15px;
+    margin-bottom:1rem;
+    text-align:center;
+}
+
+.explore label{
+    width:fit-content;
+}

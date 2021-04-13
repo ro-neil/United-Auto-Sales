@@ -8,7 +8,7 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])
 
-class RegisterForm(FlaskForm):
+class RegistrationForm(FlaskForm):
     title = StringField('Property Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     totalRooms = StringField('No. of Rooms', validators=[DataRequired()])
