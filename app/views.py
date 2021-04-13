@@ -47,11 +47,11 @@ def explore():
     """Render a page on our website that only logged in users can access."""
     return render_template('explore.html')
 
-@app.route('/secure-page')
+@app.route('/profile')
 @login_required
 def my_profile():
     """Render a page on our website that only logged in users can access."""
-    return render_template('secure_page.html')
+    return render_template('profile.html')
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

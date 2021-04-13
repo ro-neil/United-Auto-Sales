@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="profile-page d-flex flex-column rounded">
+    <div class="profile-container mb-4 d-flex justify-content-start flex-row rounded border">
+        <div class="profile-left p-4">
+            <div class="img-container rounded-circle border d-flex justify-content-center align-items-center">
+                {# <img src="{{ url_for('static',filename='img/Roneil.jpg')}}"> #}
+                Profile Pic
+            </div>
+        </div>
+        <div class="profile-right p-4">
+            <p>Name</p>
+            <p>@Username</p>
+            <p>Biography</p>
+            <div class="">
+                Contact and other info
+            </div>
+        </div>
+    </div>
+
+    <h2>Cars Favourited</h2>
+
+    <div class="cars">
+        {% for i in range(3) %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card h-100">
+                        {# <img src="{{ url_for('getImage', filename=_property.photo_name) }}" class="card-img-top" alt="{{ _property.photo_name }}"> #}
+                        Image
+                        <div class="card-body">
+                            <h5 class="card-title px-1 ml-1">Year & Make</h5>
+                            <p class="card-text text-muted md-bold">
+                                {# <img src='../static/icons/location.svg' alt='location icon' id='location-icon-all' class='icon' /> #}
+                                Model
+                            </p>
+                            <div class="badge badge-pill bg-warning px-4 py-2 text-light md-bold ml-1">Price Tag</div>
+                        </div>
+                        <div class="card-footer text-center bg-info">
+                            {# <a href="{{ url_for('propertyid', pid=_property.id) }}" class="btn btn-info font-weight-bold">View Property</a> #}
+                            View more details
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

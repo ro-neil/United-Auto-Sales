@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="car">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 view-car">
+                {# <img src="{{ url_for('getImage', filename=_car.photo_name) }}" id='view-car-img' alt="{{ _car.photo_name }}"> #}
+                <div class="card-body vp-body">
+                    <div class="car-info">
+                        <h4 class="card-title pb-1 pl-1">Year & Make</h4>
+                        <div class="price-type pb-3">
+                            <span class="badge badge-pill bg-warning px-3 py-2 text-light md-bold"
+                            data-toggle="tooltip" data-placement="top" title="Price">$Price</span>
+                            <span class="badge badge-pill bg-info px-3 py-2 text-light  md-bold"
+                            data-toggle="tooltip" data-placement="top" title="car Type">Model</span>
+                        </div>
+                        <div class="description pb-3 md-bold pl-1">Description</div>
+                        <div class="rooms-container">
+                            <p class="card-text p-rooms md-bold">
+                               {# <img src='../static/icons/bed.svg' alt='bed icon' id='bed-icon' class='mr-2 icon'/> #}
+                                Color
+                            </p>
+                            <p class="card-text p-bathrooms md-bold">
+                               {# <img src='../static/icons/shower.svg' alt='shower icon' id='shower-icon' class='mr-2 icon' /> #} 
+                               Price
+                            </p>
+                        </div>
+                        <p class="card-text p-location md-bold pb-3">
+                            {# <img src='../static/icons/location.svg' alt='location icon' id='location-icon-single' class='mr-2 icon' /> #}
+                            Body Type
+                        </p>
+                    </div>
+                    <div class='owner-container'>
+                        <a href="mailto:owner@realestate.com" class="btn btn-info" id='email-owner'>Email Owner</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
