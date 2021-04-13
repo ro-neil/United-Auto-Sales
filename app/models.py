@@ -31,6 +31,52 @@ class UserProfile(db.Model):
         self.date_joined = date_joined
         
 
+class Cars(db.Model):
+
+    __tablename__ = 'cars'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(1000))
+    make = db.Column(db.String(255))
+    model = db.Column(db.String(255))
+    color = db.Column(db.String(80))
+    year = db.Column(db.String(255))
+    transmission = db.Column(db.String(255))
+    car_type = db.Column(db.String(255))
+    photo = db.Column(db.String(255))
+    user_id = b.Column(db.Integer)
+    price = db.Column(db.Float, nullable=True)
+
+    def __init__(self,description,make,model,color,year,transmission,car_type,photo,user_id,price):
+        self.description = description
+        self.make = make
+        self.model = model
+        self.color = color
+        self.year = year
+        self.transmission = transmission
+        self.car_type = car_type
+        self.photo = photo
+        self.user_id = user_id
+        self.price = price
+
+
+class Favourites(db.Model):
+
+    __tablename__ = 'favourites'
+
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = b.Column(db.Integer)
+    user_id = b.Column(db.Integer)
+
+    def __init__(self,car_id,user_id):
+        self.car_id = car_id
+        self.user_id = user_id
+
+    
+
+
+
+
 
     def is_authenticated(self):
         return True
