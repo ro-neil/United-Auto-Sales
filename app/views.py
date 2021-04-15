@@ -25,6 +25,7 @@ import os
 
 @app.route("/api/register", methods=["POST"])
 def register():
+    """ Register a user """
     # if current_user.is_authenticated:
     #     return redirect(url_for('secure_page'))
 
@@ -48,12 +49,9 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # extract user attributes into data dictionary for parsing
-        data = {'id':user.get_id()}
-        for k, v in user.__dict__.items():
-            if k != '_sa_instance_state' and k != 'password':
-                data[k] = v
-
+        # convert sqlalchemy user object to dictionary object for JSON parsing
+        data = obj_to_dict(user)
+        data.pop('password')
         response = jsonify(data)
         flash('Registered successfully', 'success')
         login_user(user)    # load user into session
@@ -64,6 +62,7 @@ def register():
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
+    """ Login a user """
     # if current_user.is_authenticated:
     #     return redirect(url_for('secure_page'))
 
@@ -95,6 +94,7 @@ def login():
 # @login_required
 def logout():
     """Logs out the user and ends the session"""
+
     try:
         logout_user()
     except Exception:
@@ -108,17 +108,16 @@ def logout():
 @app.route("/api/cars", methods=["GET"])
 # @login_required
 def getCars():
-    """  """
+    """ Get a list of all cars available for sale """
+
     cars = db.session.query(Car).all()
+    if cars is None:
+        return jsonify(message="No cars available")
+
     carsData = []
     for car in cars:
-        carData = {}
-        carData = {'id':car.get_id()}
-        for k, v in car.__dict__.items():
-            if k != '_sa_instance_state':
-                carData[k] = v
-        carsData.append(carData)
-
+        # convert sqlalchemy car object to a dictionary object
+        carsData.append(obj_to_dict(car))
     response = jsonify(carsData)
     return response
 
@@ -126,7 +125,8 @@ def getCars():
 @app.route("/api/cars", methods=["POST"])
 # @login_required
 def addCar():
-    """  """
+    """ Add a new car """
+
     # if current_user.is_authenticated:
     #     return redirect(url_for('secure_page'))
 
@@ -153,13 +153,8 @@ def addCar():
         db.session.add(car)
         db.session.commit()
 
-        # extract user attributes into data dictionary for parsing
-        data = {'id':car.get_id()}
-        for k, v in car.__dict__.items():
-            if k != '_sa_instance_state':
-                data[k] = v
-
-        response = jsonify(data)
+        # convert sqlalchemy car object to dictionary object for JSON parsing
+        response = jsonify(obj_to_dict(car))
         flash('Car added successfully', 'success')
         return response
     else:
@@ -167,20 +162,24 @@ def addCar():
         return response
 
 
-
-@app.route("/api/cars/<car_id>", methods=["GET"])
-@login_required
+@app.route("/api/cars/<int:car_id>", methods=["GET"])
+# @login_required
 def getCar(car_id):
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ View details of a specific car """
+
+    car = Car.query.get(car_id)
+    if car is None:
+        return jsonify(message="Car not found")
+    return jsonify(obj_to_dict(car))
+
 
 @app.route("/api/cars/<car_id>/favourite", methods=["POST"])
-@login_required
+# @login_required
 def addFavourite(car_id):
     """  """
     response = jsonify({'status':'Under Construction'})
     return response
+
 
 @app.route("/api/search", methods=["GET"])
 @login_required
@@ -189,6 +188,7 @@ def search():
     response = jsonify({'status':'Under Construction'})
     return response
 
+
 @app.route("/api/users/<user_id>", methods=["GET"])
 @login_required
 def getUser(user_id):
@@ -196,11 +196,13 @@ def getUser(user_id):
     response = jsonify({'status':'Under Construction'})
     return response
 
+
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])
 def getFavourites(user_id):
     """  """
     response = jsonify({'status':'Under Construction'})
     return response
+
 
 @app.route('/secure-page')
 @login_required
@@ -253,6 +255,13 @@ def flash_errors(form):
 def currentDate():
     return datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
 
+def obj_to_dict(obj):
+    '''Converts an sqlalchemy database object to a dictionary format'''
+    data = {'id':obj.get_id()}
+    for k, v in obj.__dict__.items():
+        if k != '_sa_instance_state':
+            data[k] = v
+    return data
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
