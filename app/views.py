@@ -109,8 +109,17 @@ def logout():
 # @login_required
 def getCars():
     """  """
-    #cars = db.session.query(Car).all()
-    response = jsonify({'status':'Get cars Under Construction'})
+    cars = db.session.query(Car).all()
+    carsData = []
+    for car in cars:
+        carData = {}
+        carData = {'id':car.get_id()}
+        for k, v in car.__dict__.items():
+            if k != '_sa_instance_state':
+                carData[k] = v
+        carsData.append(carData)
+
+    response = jsonify(carsData)
     return response
 
 
