@@ -21,7 +21,7 @@ class RegistrationForm(FlaskForm):
         FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')
     ])
 
-class NewCar(FlaskForm):
+class NewCarForm(FlaskForm):
     title = StringField('Property Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     totalRooms = StringField('No. of Rooms', validators=[DataRequired()])

@@ -13,6 +13,8 @@ from app.models import *
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask.json import jsonify
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
 
 
 
@@ -37,10 +39,12 @@ def register():
         location = request.form['location']
         biography = request.form['biography']
         photo = request.form['photo']
+        photo_name = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['USERS_FOLDER'], photo_name))
         date_joined = currentDate()
 
         # db access
-        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+        user = UserProfile(username, password, name, email, location, biography, photo_name, date_joined)
         db.session.add(user)
         db.session.commit()
 
@@ -114,8 +118,55 @@ def getCars():
 # @login_required
 def addCar():
     """  """
-    response = jsonify({'status':'Add car Under Construction'})
-    return response
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('secure_page'))
+
+    form = NewCarForm()
+
+    if not form.validate_on_submit():   # remove not
+        # include security checks #
+    
+        description = request.form['description']
+        make = db.Column(db.String(25))
+        model = db.Column(db.String(50))
+        color = db.Column(db.String(25))
+        year = db.Column(db.String(4))
+        transmission = db.Column(db.String(25))
+        car_type = db.Column(db.String(25))
+        photo = db.Column(db.String(150))
+        user_id = db.Column(db.Integer)
+        price = db.Column(db.Float)
+
+        response = jsonify({'status':'Add car Under Construction'})
+    
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        location = request.form['location']
+        biography = request.form['biography']
+        photo = request.form['photo']
+        date_joined = currentDate()
+
+        # db access
+        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+        db.session.add(user)
+        db.session.commit()
+
+        # extract user attributes into data dictionary for parsing
+        data = {'id':user.get_id()}
+        for k, v in user.__dict__.items():
+            if k != '_sa_instance_state' and k != 'password':
+                data[k] = v
+
+        response = jsonify(data)
+        flash('Registered successfully', 'success')
+        login_user(user)    # load user into session
+        return response
+    else:
+        response = jsonify(form.errors)
+        return response
+
 
 
 @app.route("/api/cars/<car_id>", methods=["GET"])
