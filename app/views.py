@@ -173,12 +173,20 @@ def getCar(car_id):
     return jsonify(obj_to_dict(car))
 
 
-@app.route("/api/cars/<car_id>/favourite", methods=["POST"])
+@app.route("/api/cars/<int:car_id>/favourite", methods=["POST"])
 # @login_required
 def addFavourite(car_id):
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ Favourites a specific car """
+
+    favourite = Favourite(car_id, current_user.get_id())
+    db.session.add(favourite)
+    db.session.commit()
+
+    response = {
+        "message": "Car Successfully Favourited",
+        "car_id": car_id
+    }
+    return jsonify(response)
 
 
 @app.route("/api/search", methods=["GET"])
