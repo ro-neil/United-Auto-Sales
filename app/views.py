@@ -88,7 +88,7 @@ def login():
 
 
 @app.route("/api/auth/logout", methods=["POST"])
-@login_required
+# @login_required
 def logout():
     """Logs out the user and ends the session"""
     try:
@@ -102,19 +102,19 @@ def logout():
 
 
 @app.route("/api/cars", methods=["GET"])
-@login_required
+# @login_required
 def getCars():
     """  """
-    cars = db.session.query(Car).all()
-    response = jsonify({'status':'Under Construction'})
+    #cars = db.session.query(Car).all()
+    response = jsonify({'status':'Get cars Under Construction'})
     return response
 
 
 @app.route("/api/cars", methods=["POST"])
-@login_required
+# @login_required
 def addCar():
     """  """
-    response = jsonify({'status':'Under Construction'})
+    response = jsonify({'status':'Add car Under Construction'})
     return response
 
 
