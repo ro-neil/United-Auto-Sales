@@ -28,45 +28,47 @@ def register():
 
     form = RegistrationForm()
     if request.method == "POST":
-        #if form.validate_on_submit():
+        if not form.validate_on_submit():   # remove not
             # include security checks #
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['name']
-        email = request.form['email']
-        location = request.form['location']
-        biography = request.form['biography']
-        photo = request.form['photo']
-        date_joined = currentDate()
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['name']
+            email = request.form['email']
+            location = request.form['location']
+            biography = request.form['biography']
+            photo = request.form['photo']
+            date_joined = currentDate()
 
-        # db access
-        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
-        db.session.add(user)
-        db.session.commit()
+            # db access
+            user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+            db.session.add(user)
+            db.session.commit()
 
-        # extract user attributes into data dictionary for parsing
-        data = {'id':user.get_id()}
-        for k, v in user.__dict__.items():
-            if k != '_sa_instance_state' and k != 'password':
-                data[k] = v
+            # extract user attributes into data dictionary for parsing
+            data = {'id':user.get_id()}
+            for k, v in user.__dict__.items():
+                if k != '_sa_instance_state' and k != 'password':
+                    data[k] = v
 
-        response = jsonify(data)
-        flash('Registered successfully', 'success')
-        login_user(user)    # load user into session
-        return response
-        # else:
-        #     flash_errors(form)
+            response = jsonify(data)
+            flash('Registered successfully', 'success')
+            login_user(user)    # load user into session
+            return response
+        else:
+            response = jsonify(form.errors)
+            return response
     return render_template("registration_form.html", form=form)
 
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('secure_page'))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('secure_page'))
 
     form = LoginForm()
+    
     if request.method == "POST":
-        if form.validate_on_submit():
+        if not form.validate_on_submit():   # remove not
             # include security checks #
             username = request.form['username']
             password = request.form['password']
@@ -78,70 +80,78 @@ def login():
             if user is not None and check_password_hash(user.password, password):
                 login_user(user)
                 flash(f'Hey, {username}!', 'success')
-                response = jsonify(
-                    {
-                    "username": username,
-                    }
-                )
+                response = jsonify({'username': username})
                 return response
             else:
-                flash('Username or Password is incorrect.', 'danger')
+                response = jsonify({'error':'Username or Password is incorrect.'})
+                return response
+                
         else:
-            flash_errors(form)
+            response = jsonify(form.errors)
+            return response
     return render_template("login.html", form=form)
 
 
-@app.route("/api/auth/logout")
+@app.route("/api/auth/logout", methods=["POST"])
 @login_required
 def logout():
     """Logs out the user and ends the session"""
     logout_user()
-    flash('You have been logged out.', 'danger')
-    return redirect(url_for('home'))
+    success = 'You have been logged out'
+    response = jsonify({'success':success})
+    flash(success, 'danger')
+    return response
 
 
 @app.route("/api/cars", methods=["GET"])
 @login_required
 def getCars():
-    """Render website's home page."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 
 @app.route("/api/cars", methods=["POST"])
 @login_required
 def addCar():
-    """Render the website's about page."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 
 @app.route("/api/cars/<car_id>", methods=["GET"])
 @login_required
 def getCar(car_id):
-    """Render a page on our website that only logged in users can access."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 @app.route("/api/cars/<car_id>/favourite", methods=["POST"])
 @login_required
 def addFavourite(car_id):
-    """Render a page on our website that only logged in users can access."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 @app.route("/api/search", methods=["GET"])
 @login_required
 def search():
-    """Render a page on our website that only logged in users can access."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 @app.route("/api/users/<user_id>", methods=["GET"])
 @login_required
 def getUser(user_id):
-    """Render a page on our website that only logged in users can access."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])
 def getFavourites(user_id):
-    """Render a page on our website that only logged in users can access."""
-    return ''
+    """  """
+    response = jsonify({})
+    return response
 
 @app.route('/secure-page')
 @login_required
@@ -183,8 +193,8 @@ def load_user(id):
 def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
-            flash(u"Error in the %s field - %s" % (
-                getattr(form, field).label.text, error), 'danger')
+            msg = f"Error in the {getattr(form, field).label.text} field - {error}"
+            flash(msg, 'danger')
 
 
 ###
