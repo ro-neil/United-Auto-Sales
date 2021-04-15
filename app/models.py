@@ -29,23 +29,41 @@ class UserProfile(db.Model):
         self.biography = biography
         self.photo = photo
         self.date_joined = date_joined
+    
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2 support
+        except NameError:
+            return str(self.id)  # python 3 support
+
+    def __repr__(self):
+        return '<User %r>' % (self.username)
         
 
 class Cars(db.Model):
-
+    
     __tablename__ = 'cars'
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(1000))
-    make = db.Column(db.String(255))
-    model = db.Column(db.String(255))
-    color = db.Column(db.String(80))
-    year = db.Column(db.String(255))
-    transmission = db.Column(db.String(255))
-    car_type = db.Column(db.String(255))
-    photo = db.Column(db.String(255))
-    user_id = b.Column(db.Integer)
-    price = db.Column(db.Float, nullable=True)
+    make = db.Column(db.String(25))
+    model = db.Column(db.String(50))
+    color = db.Column(db.String(25))
+    year = db.Column(db.String(4))
+    transmission = db.Column(db.String(25))
+    car_type = db.Column(db.String(25))
+    photo = db.Column(db.String(150))
+    user_id = db.Column(db.Integer)
+    price = db.Column(db.Float)
 
     def __init__(self,description,make,model,color,year,transmission,car_type,photo,user_id,price):
         self.description = description
@@ -65,33 +83,9 @@ class Favourites(db.Model):
     __tablename__ = 'favourites'
 
     id = db.Column(db.Integer, primary_key=True)
-    car_id = b.Column(db.Integer)
-    user_id = b.Column(db.Integer)
+    car_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
 
     def __init__(self,car_id,user_id):
         self.car_id = car_id
         self.user_id = user_id
-
-    
-
-
-
-
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2 support
-        except NameError:
-            return str(self.id)  # python 3 support
-
-    def __repr__(self):
-        return '<User %r>' % (self.username)
