@@ -29,9 +29,7 @@ class UserProfile(db.Model):
         self.biography = biography
         self.photo = photo
         self.date_joined = date_joined
-        
-
-
+    
     def is_authenticated(self):
         return True
 
@@ -49,3 +47,45 @@ class UserProfile(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.username)
+        
+
+class Cars(db.Model):
+    
+    __tablename__ = 'cars'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(1000))
+    make = db.Column(db.String(25))
+    model = db.Column(db.String(50))
+    color = db.Column(db.String(25))
+    year = db.Column(db.String(4))
+    transmission = db.Column(db.String(25))
+    car_type = db.Column(db.String(25))
+    photo = db.Column(db.String(150))
+    user_id = db.Column(db.Integer)
+    price = db.Column(db.Float)
+
+    def __init__(self,description,make,model,color,year,transmission,car_type,photo,user_id,price):
+        self.description = description
+        self.make = make
+        self.model = model
+        self.color = color
+        self.year = year
+        self.transmission = transmission
+        self.car_type = car_type
+        self.photo = photo
+        self.user_id = user_id
+        self.price = price
+
+
+class Favourites(db.Model):
+
+    __tablename__ = 'favourites'
+
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+
+    def __init__(self,car_id,user_id):
+        self.car_id = car_id
+        self.user_id = user_id
