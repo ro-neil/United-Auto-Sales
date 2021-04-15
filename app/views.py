@@ -11,6 +11,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import *
 from app.models import *
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask.json import jsonify
+from datetime import datetime
 
 
 
@@ -21,32 +23,39 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 @app.route("/api/register", methods=["POST"])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('secure_page'))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('secure_page'))
 
     form = RegistrationForm()
     if request.method == "POST":
-        if form.validate_on_submit():
+        #if form.validate_on_submit():
             # include security checks #
-            username = request.form['username']
-            password = request.form['password']
-            name = request.form['name']
-            email = request.form['email']
-            location = request.form['location']
-            biography = request.form['biography']
-            photo = request.form['photo']
-            date_joined = request.form['date_joined']
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        location = request.form['location']
+        biography = request.form['biography']
+        photo = request.form['photo']
+        date_joined = currentDate()
 
-            # db access
-            user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
-            db.session.add(user)
-            db.session.commit()
+        # db access
+        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+        db.session.add(user)
+        db.session.commit()
 
-            flash('Registered successfully', 'success')
-            login_user(user)    # load user into session
-            return redirect(url_for("secure_page"))
-        else:
-            flash_errors(form)
+        # extract user attributes into data dictionary for parsing
+        data = {'id':user.get_id()}
+        for k, v in user.__dict__.items():
+            if k != '_sa_instance_state' and k != 'password':
+                data[k] = v
+
+        response = jsonify(data)
+        flash('Registered successfully', 'success')
+        login_user(user)    # load user into session
+        return response
+        # else:
+        #     flash_errors(form)
     return render_template("registration_form.html", form=form)
 
 
@@ -69,7 +78,12 @@ def login():
             if user is not None and check_password_hash(user.password, password):
                 login_user(user)
                 flash(f'Hey, {username}!', 'success')
-                return redirect(url_for("secure_page"))
+                response = jsonify(
+                    {
+                    "username": username,
+                    }
+                )
+                return response
             else:
                 flash('Username or Password is incorrect.', 'danger')
         else:
@@ -128,12 +142,34 @@ def getUser(user_id):
 def getFavourites(user_id):
     """Render a page on our website that only logged in users can access."""
     return ''
-    
+
 @app.route('/secure-page')
 @login_required
 def secure_page():
     """Render a page on our website that only logged in users can access."""
     return render_template('secure_page.html')
+
+##############
+# Vue Routes #
+##############
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/register')
+def registrationForm():
+    return render_template('home.html')
+
+@app.route('/login')
+def vueLogin():
+    return render_template('login.html')
+
+@app.route('/logout')
+def vueLogout():
+    logout_user()
+    flash('You have been logged out.', 'danger')
+    return redirect(url_for('home'))
 
 
 # user_loader callback. This callback is used to reload the user object from
@@ -154,6 +190,9 @@ def flash_errors(form):
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+
+def currentDate():
+    return datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
 
 
 @app.route('/<file_name>.txt')
