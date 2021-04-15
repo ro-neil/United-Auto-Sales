@@ -27,38 +27,36 @@ def register():
     #     return redirect(url_for('secure_page'))
 
     form = RegistrationForm()
-    if request.method == "POST":
-        if not form.validate_on_submit():   # remove not
-            # include security checks #
-            username = request.form['username']
-            password = request.form['password']
-            name = request.form['name']
-            email = request.form['email']
-            location = request.form['location']
-            biography = request.form['biography']
-            photo = request.form['photo']
-            date_joined = currentDate()
 
-            # db access
-            user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
-            db.session.add(user)
-            db.session.commit()
+    if not form.validate_on_submit():   # remove not
+        # include security checks #
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        location = request.form['location']
+        biography = request.form['biography']
+        photo = request.form['photo']
+        date_joined = currentDate()
 
-            # extract user attributes into data dictionary for parsing
-            data = {'id':user.get_id()}
-            for k, v in user.__dict__.items():
-                if k != '_sa_instance_state' and k != 'password':
-                    data[k] = v
+        # db access
+        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+        db.session.add(user)
+        db.session.commit()
 
-            response = jsonify(data)
-            flash('Registered successfully', 'success')
-            login_user(user)    # load user into session
-            return response
-        else:
-            response = jsonify(form.errors)
-            return response
-    return render_template("registration_form.html", form=form)
+        # extract user attributes into data dictionary for parsing
+        data = {'id':user.get_id()}
+        for k, v in user.__dict__.items():
+            if k != '_sa_instance_state' and k != 'password':
+                data[k] = v
 
+        response = jsonify(data)
+        flash('Registered successfully', 'success')
+        login_user(user)    # load user into session
+        return response
+    else:
+        response = jsonify(form.errors)
+        return response
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
@@ -66,37 +64,41 @@ def login():
     #     return redirect(url_for('secure_page'))
 
     form = LoginForm()
-    
-    if request.method == "POST":
-        if not form.validate_on_submit():   # remove not
-            # include security checks #
-            username = request.form['username']
-            password = request.form['password']
 
-            # db access
-            user = UserProfile.query.filter_by(username=username).first()
+    if not form.validate_on_submit():   # remove not
+        # include security checks #
+        username = request.form['username']
+        password = request.form['password']
 
-            # validate the password and ensure that a user was found
-            if user is not None and check_password_hash(user.password, password):
-                login_user(user)
-                flash(f'Hey, {username}!', 'success')
-                response = jsonify({'username': username})
-                return response
-            else:
-                response = jsonify({'error':'Username or Password is incorrect.'})
-                return response
-                
-        else:
-            response = jsonify(form.errors)
+        # db access
+        user = UserProfile.query.filter_by(username=username).first()
+
+        # validate the password and ensure that a user was found
+        if user is not None and check_password_hash(user.password, password):
+            login_user(user)
+            flash(f'Hey, {username}!', 'success')
+            response = jsonify({'username': username})
             return response
-    return render_template("login.html", form=form)
+        else:
+            response = jsonify({'error':'Username or Password is incorrect.'})
+            return response
+    else:
+        response = jsonify(form.errors)
+        return response
 
 
 @app.route("/api/auth/logout", methods=["POST"])
 @login_required
 def logout():
     """Logs out the user and ends the session"""
-    logout_user()
+    try:
+        logout_user()
+    except Exception:
+        failure = "We're unable to log you out"
+        response = jsonify({'success':failure})
+        flash(failure, 'danger')
+        return response
+
     success = 'You have been logged out'
     response = jsonify({'success':success})
     flash(success, 'danger')
