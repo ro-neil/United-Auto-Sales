@@ -77,6 +77,15 @@ class Car(db.Model):
         self.user_id = user_id
         self.price = price
 
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2 support
+        except NameError:
+            return str(self.id)  # python 3 support
+
+    def __repr__(self):
+        return '<Car %r %r>' % (self.make, self.model)
+
 
 class Favourite(db.Model):
 
