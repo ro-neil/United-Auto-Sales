@@ -57,7 +57,7 @@ class Car(db.Model):
     description = db.Column(db.String(1000))
     make = db.Column(db.String(25))
     model = db.Column(db.String(50))
-    color = db.Column(db.String(25))
+    colour = db.Column(db.String(25))
     year = db.Column(db.String(4))
     transmission = db.Column(db.String(25))
     car_type = db.Column(db.String(25))
@@ -65,11 +65,11 @@ class Car(db.Model):
     user_id = db.Column(db.Integer)
     price = db.Column(db.Float)
 
-    def __init__(self,description,make,model,color,year,transmission,car_type,photo,user_id,price):
+    def __init__(self,description,make,model,colour,year,transmission,car_type,photo,user_id,price):
         self.description = description
         self.make = make
         self.model = model
-        self.color = color
+        self.colour = colour
         self.year = year
         self.transmission = transmission
         self.car_type = car_type

@@ -127,41 +127,31 @@ def addCar():
         # include security checks #
     
         description = request.form['description']
-        make = db.Column(db.String(25))
-        model = db.Column(db.String(50))
-        color = db.Column(db.String(25))
-        year = db.Column(db.String(4))
-        transmission = db.Column(db.String(25))
-        car_type = db.Column(db.String(25))
-        photo = db.Column(db.String(150))
-        user_id = db.Column(db.Integer)
-        price = db.Column(db.Float)
-
-        response = jsonify({'status':'Add car Under Construction'})
-    
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['name']
-        email = request.form['email']
-        location = request.form['location']
-        biography = request.form['biography']
+        make = request.form['make']
+        model = request.form['model']
+        colour = request.form['colour']
+        year = request.form['year']
+        transmission = request.form['transmission']
+        car_type = request.form['car_type']
         photo = request.form['photo']
-        date_joined = currentDate()
+        photo_name = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['CARS_FOLDER'], photo_name))
+        user_id = current_user.get_id()
+        price = float(request.form['price'])
 
         # db access
-        user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
-        db.session.add(user)
+        car = Car(description, make, model, colour, year, transmission, car_type, photo_name, user_id, price)
+        db.session.add(car)
         db.session.commit()
 
         # extract user attributes into data dictionary for parsing
-        data = {'id':user.get_id()}
-        for k, v in user.__dict__.items():
-            if k != '_sa_instance_state' and k != 'password':
+        data = {'id':car.get_id()}
+        for k, v in car.__dict__.items():
+            if k != '_sa_instance_state':
                 data[k] = v
 
         response = jsonify(data)
-        flash('Registered successfully', 'success')
-        login_user(user)    # load user into session
+        flash('Car added successfully', 'success')
         return response
     else:
         response = jsonify(form.errors)
