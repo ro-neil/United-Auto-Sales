@@ -77,7 +77,7 @@ def login():
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
             flash(f'Hey, {username}!', 'success')
-            response = jsonify({'username': username})
+            response = jsonify({"message": "Login Successful", 'token':''})
             return response
         else:
             response = jsonify({'error':'Username or Password is incorrect.'})
@@ -94,14 +94,10 @@ def logout():
     try:
         logout_user()
     except Exception:
-        failure = "We're unable to log you out"
-        response = jsonify({'success':failure})
-        flash(failure, 'danger')
-        return response
+        return 'Access token is missing or invalid, 401'
 
-    success = 'You have been logged out'
-    response = jsonify({'success':success})
-    flash(success, 'danger')
+    flash('You have been logged out', 'danger')
+    response = jsonify({"message": "Log out successful"})
     return response
 
 
@@ -109,6 +105,7 @@ def logout():
 @login_required
 def getCars():
     """  """
+    cars = db.session.query(Car).all()
     response = jsonify({'status':'Under Construction'})
     return response
 
