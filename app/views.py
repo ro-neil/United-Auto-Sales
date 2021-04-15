@@ -10,50 +10,16 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import *
 from app.models import *
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 ###
 # Routing for your application.
 ###
 
-@app.route('/')
-def home():
-    """Render website's home page."""
-    return render_template('home.html')
 
-
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html')
-
-
-@app.route('/secure-page')
-@login_required
-def secure_page():
-    """Render a page on our website that only logged in users can access."""
-    return render_template('secure_page.html')
-
-@app.route('/secure-page')
-@login_required
-def add_car():
-    """Render a page on our website that only logged in users can access."""
-    return render_template('secure_page.html')
-
-@app.route('/explore')
-@login_required
-def explore():
-    """Render a page on our website that only logged in users can access."""
-    return render_template('explore.html')
-
-@app.route('/profile')
-@login_required
-def my_profile():
-    """Render a page on our website that only logged in users can access."""
-    return render_template('profile.html')
-
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/api/register", methods=["POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('secure_page'))
@@ -61,26 +27,30 @@ def register():
     form = RegistrationForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            # # Get the username and password values from the form.
-            # username = request.form['username']
-            # password = request.form['password']
+            # include security checks #
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['name']
+            email = request.form['email']
+            location = request.form['location']
+            biography = request.form['biography']
+            photo = request.form['photo']
+            date_joined = request.form['date_joined']
 
-            # # query database for a user based on the username
-            # user = UserProfile.query.filter_by(username=username).first()
-            # # validate the password and ensure that a user was found
-            # if user is None:
+            # db access
+            user = UserProfile(username, password, name, email, location, biography, photo, date_joined)
+            db.session.add(user)
+            db.session.commit()
 
-            #     """Add new user to database here"""
-
-            #     login_user(user)    # load into session
-            flash('Registered successfully.', 'success') # flash a message to the user
-            return redirect(url_for("secure_page"))  # redirect to a secure-page route
-            # else:
-                #     flash('Username or Password is incorrect.', 'danger')
-    flash_errors(form)
+            flash('Registered successfully', 'success')
+            login_user(user)    # load user into session
+            return redirect(url_for("secure_page"))
+        else:
+            flash_errors(form)
     return render_template("registration_form.html", form=form)
 
-@app.route("/login", methods=["GET", "POST"])
+
+@app.route("/api/auth/login", methods=["POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('secure_page'))
@@ -88,30 +58,82 @@ def login():
     form = LoginForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            # Get the username and password values from the form.
+            # include security checks #
             username = request.form['username']
             password = request.form['password']
 
-            # query database for a user based on the username
+            # db access
             user = UserProfile.query.filter_by(username=username).first()
+
             # validate the password and ensure that a user was found
             if user is not None and check_password_hash(user.password, password):
-                login_user(user)    # load into session
-                flash('Logged in successfully.', 'success') # flash a message to the user
-                return redirect(url_for("secure_page"))  # redirect to a secure-page route
+                login_user(user)
+                flash(f'Hey, {username}!', 'success')
+                return redirect(url_for("secure_page"))
             else:
                 flash('Username or Password is incorrect.', 'danger')
-    flash_errors(form)
+        else:
+            flash_errors(form)
     return render_template("login.html", form=form)
 
 
-@app.route("/logout")
+@app.route("/api/auth/logout")
 @login_required
 def logout():
-    # Logs out the user and ends the session
+    """Logs out the user and ends the session"""
     logout_user()
     flash('You have been logged out.', 'danger')
     return redirect(url_for('home'))
+
+
+@app.route("/api/cars", methods=["GET"])
+@login_required
+def getCars():
+    """Render website's home page."""
+    return ''
+
+
+@app.route("/api/cars", methods=["POST"])
+@login_required
+def addCar():
+    """Render the website's about page."""
+    return ''
+
+
+@app.route("/api/cars/<car_id>", methods=["GET"])
+@login_required
+def getCar(car_id):
+    """Render a page on our website that only logged in users can access."""
+    return ''
+
+@app.route("/api/cars/<car_id>/favourite", methods=["POST"])
+@login_required
+def addFavourite(car_id):
+    """Render a page on our website that only logged in users can access."""
+    return ''
+
+@app.route("/api/search", methods=["GET"])
+@login_required
+def search():
+    """Render a page on our website that only logged in users can access."""
+    return ''
+
+@app.route("/api/users/<user_id>", methods=["GET"])
+@login_required
+def getUser(user_id):
+    """Render a page on our website that only logged in users can access."""
+    return ''
+
+@app.route("/api/users/<user_id>/favourites", methods=["GET"])
+def getFavourites(user_id):
+    """Render a page on our website that only logged in users can access."""
+    return ''
+    
+@app.route('/secure-page')
+@login_required
+def secure_page():
+    """Render a page on our website that only logged in users can access."""
+    return render_template('secure_page.html')
 
 
 # user_loader callback. This callback is used to reload the user object from
