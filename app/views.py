@@ -38,7 +38,7 @@ def register():
         email = request.form['email']
         location = request.form['location']
         biography = request.form['biography']
-        photo = request.form['photo']
+        photo = request.files['photo']
         photo_name = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['USERS_FOLDER'], photo_name))
         date_joined = currentDate()
@@ -133,7 +133,7 @@ def addCar():
         year = request.form['year']
         transmission = request.form['transmission']
         car_type = request.form['car_type']
-        photo = request.form['photo']
+        photo = request.files['photo']
         photo_name = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['CARS_FOLDER'], photo_name))
         user_id = current_user.get_id()
