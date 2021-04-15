@@ -49,7 +49,7 @@ class UserProfile(db.Model):
         return '<User %r>' % (self.username)
         
 
-class Cars(db.Model):
+class Car(db.Model):
     
     __tablename__ = 'cars'
 
@@ -78,7 +78,7 @@ class Cars(db.Model):
         self.price = price
 
 
-class Favourites(db.Model):
+class Favourite(db.Model):
 
     __tablename__ = 'favourites'
 

@@ -20,4 +20,3 @@ class RegistrationForm(FlaskForm):
         FileRequired(),
         FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')
     ])
-    
