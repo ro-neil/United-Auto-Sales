@@ -109,7 +109,7 @@ def logout():
 @login_required
 def getCars():
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 
@@ -117,7 +117,7 @@ def getCars():
 @login_required
 def addCar():
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 
@@ -125,34 +125,34 @@ def addCar():
 @login_required
 def getCar(car_id):
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 @app.route("/api/cars/<car_id>/favourite", methods=["POST"])
 @login_required
 def addFavourite(car_id):
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 @app.route("/api/search", methods=["GET"])
 @login_required
 def search():
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 @app.route("/api/users/<user_id>", methods=["GET"])
 @login_required
 def getUser(user_id):
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])
 def getFavourites(user_id):
     """  """
-    response = jsonify({})
+    response = jsonify({'status':'Under Construction'})
     return response
 
 @app.route('/secure-page')
