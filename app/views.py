@@ -46,7 +46,7 @@ def register():
         date_joined = currentDate()
 
         # db access
-        user = UserProfile(username, password, name, email, location, biography, photo_name, date_joined)
+        user = User(username, password, name, email, location, biography, photo_name, date_joined)
         db.session.add(user)
         db.session.commit()
 
@@ -75,7 +75,7 @@ def login():
         password = request.form['password']
 
         # db access
-        user = UserProfile.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
         # validate the password and ensure that a user was found
         if user is not None and check_password_hash(user.password, password):
@@ -212,12 +212,19 @@ def search():
     return jsonify(data)
 
 
-@app.route("/api/users/<user_id>", methods=["GET"])
-@login_required
+@app.route("/api/users/<int:user_id>", methods=["GET"])
+# @login_required
 def getUser(user_id):
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ Get details for a specific user """
+
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify(message="User not found")
+    
+    user = obj_to_dict(user)
+    user['date_joined'] = user['date_joined'].strftime("%Y-%m-%d, %H:%M:%S") # reformat date
+    user.pop('password')
+    return jsonify(user)
 
 
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])
@@ -260,7 +267,7 @@ def vueLogout():
 # the user ID stored in the session
 @login_manager.user_loader
 def load_user(id):
-    return UserProfile.query.get(int(id))
+    return User.query.get(int(id))
 
 # Flash errors from the form if validation fails with Flask-WTF
 # http://flask.pocoo.org/snippets/12/
