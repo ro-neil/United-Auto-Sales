@@ -192,9 +192,17 @@ def addFavourite(car_id):
 @app.route("/api/search", methods=["GET"])
 @login_required
 def search():
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ Search for cars based on their make or model """
+
+        # include security checks #
+    make = request.args.get('make')
+    model = request.args.get('model')
+
+    cars = Car.query.filter_by(make=make, model=model)
+    data = []
+    for car in cars:
+        data.append(obj_to_dict(car))
+    return jsonify(data)
 
 
 @app.route("/api/users/<user_id>", methods=["GET"])
