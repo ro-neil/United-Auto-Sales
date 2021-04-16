@@ -220,7 +220,11 @@ def getUser(user_id):
     user = User.query.get(user_id)
     if user is None:
         return jsonify(message="User not found")
-    return jsonify(obj_to_dict(user))
+    
+    user = obj_to_dict(user)
+    user['date_joined'] = user['date_joined'].strftime("%Y-%m-%d, %H:%M:%S") # reformat date
+    user.pop('password')
+    return jsonify(user)
 
 
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])
