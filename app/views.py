@@ -227,11 +227,20 @@ def getUser(user_id):
     return jsonify(user)
 
 
-@app.route("/api/users/<user_id>/favourites", methods=["GET"])
+@app.route("/api/users/<int:user_id>/favourites", methods=["GET"])
+# @login_required
 def getFavourites(user_id):
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ Get the cars favourited by a user """
+    favourites = Favourite.query.filter_by(user_id=user_id).all()
+    if favourites is None:
+        return jsonify(message="Favourites not found")
+    
+    data = []
+    for favourite in favourites:
+        car_id = obj_to_dict(favourite)['car_id']
+        car = Car.query.get(car_id)
+        data.append(obj_to_dict(car))
+    return jsonify(data)
 
 
 @app.route('/secure-page')
