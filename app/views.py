@@ -215,9 +215,12 @@ def search():
 @app.route("/api/users/<user_id>", methods=["GET"])
 @login_required
 def getUser(user_id):
-    """  """
-    response = jsonify({'status':'Under Construction'})
-    return response
+    """ Get details for a specific user """
+    
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify(message="User not found")
+    return jsonify(obj_to_dict(user))
 
 
 @app.route("/api/users/<user_id>/favourites", methods=["GET"])

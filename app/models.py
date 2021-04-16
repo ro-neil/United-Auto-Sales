@@ -3,12 +3,12 @@ from werkzeug.security import generate_password_hash
 from flask_login._compat import unicode
 
 
-class UserProfile(db.Model):
+class User(db.Model):
     # You can use this to change the table name. The default convention is to use
-    # the class name. In this case a class name of UserProfile would create a
+    # the class name. In this case a class name of User would create a
     # user_profile (singular) table, but if we specify __tablename__ we can change it
-    # to `user_profiles` (plural) or some other name.
-    __tablename__ = 'user_profiles'
+    # to `Users` (plural) or some other name.
+    __tablename__ = 'Users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
@@ -51,7 +51,7 @@ class UserProfile(db.Model):
 
 class Car(db.Model):
     
-    __tablename__ = 'cars'
+    __tablename__ = 'Cars'
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(1000))
@@ -89,7 +89,7 @@ class Car(db.Model):
 
 class Favourite(db.Model):
 
-    __tablename__ = 'favourites'
+    __tablename__ = 'Favourites'
 
     id = db.Column(db.Integer, primary_key=True)
     car_id = db.Column(db.Integer)
