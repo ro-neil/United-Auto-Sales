@@ -9,14 +9,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired()])
 
 class RegistrationForm(FlaskForm):
-    title = StringField('Property Title', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
-    totalRooms = StringField('No. of Rooms', validators=[DataRequired()])
-    totalBathrooms = StringField('No. of Bathrooms', validators=[DataRequired()])
-    price = StringField('Price', validators=[DataRequired()])
-    propertyType = SelectField('Property Type', choices=['House', 'Apartment'], validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
+    fullname = StringField('Fullname', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
-    photo = FileField('Photo', validators=[
+    biography = TextAreaField('Biography', validators=[DataRequired()])
+    photo = FileField('Upload Photo', validators=[
         FileRequired(),
         FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')
     ])

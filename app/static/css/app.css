@@ -152,3 +152,28 @@ textarea{
 }
 
 /******END PROFILE PAGE******/
+
+/******FLASH MESSAGE******/
+.flash{
+    background-color: #28a745;
+    width: fit-content;
+    border-radius: 0.25rem !important;
+    color: white;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.not-found{
+    padding-top: 40px;
+}
+.not-found h1, .not-found p{
+    text-align:center;
+}
+.not-found h1{
+    font-size:64px;
+    margin:75px 0 50px;
+}
+.not-found p{
+    font-size:24px;
+    margin:15px 0;
+}

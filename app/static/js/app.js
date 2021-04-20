@@ -27,13 +27,87 @@ const Home = {
 const Register = {
   name: 'Register',
   template: `
-      <div class="register text-center">
-        <h1>{{ welcome }}</h1>
-      </div>
+      <div class="container col-md-8 offset-md-2" id="registration-page">
+      <h1 class="font-weight-bold text-center registration-header">Register New User</h1>
+      <form method="post" @submit.prevent="register_user" id="registrationForm">
+          <div class="form-row">  
+              <div class="form-group col-md-6 sm-padding-right">
+                  <label for="username">Username</label><br>
+                  <input type="text" name="username" class='form-control'/> 
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="password">Password</label><br>
+                  <input type="password" name="password" class='form-control'/>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6 sm-padding-right">
+                  <label for="fullname">Fullname</label><br>
+                  <input type="text" name="fullname" class='form-control'/> 
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="email">Email</label><br>
+                  <input type="text" name="email" class='form-control'/>
+              </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 sm-padding-right">
+              <label for="location">Location</label><br>
+              <input type="text" name="location" class='form-control'/>
+            </div>
+            <div class="form-group col-md-6">
+              
+            </div>
+          </div>
+          <div class="form-group">
+              <label for="biography">Biography</label><br>
+              <textarea cols="50" rows="2" name="biography" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+              <label for="photo"><b>Upload Photo</b></label><br>
+              <input type="file" name="photo"/> 
+          </div>
+          <div class="text-center">
+              <button type="submit" id="submit-button" class="btn bg-info">Register</button>
+          </div>
+      </form>
+    </div>
   `,
   data(){
     return {
-      welcome: '<Register form goes here>'
+      user_data: '',
+      message: ''
+    }
+  },
+  methods: {
+    register_user() {
+      let form = document.getElementById('registrationForm');
+      let form_data = new FormData(form);
+      let self = this;
+      fetch("/api/register", {
+          method: 'POST',
+          body: form_data,
+          headers: {
+              'X-CSRFToken': csrf_token
+          },
+          credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.text();
+      })
+      .then(function (jsonResponse) {
+          
+          if (jsonResponse['username']){  // if no error
+            self.$router.push('/login')
+            self.user_data = jsonResponse
+          } else {
+            self.message = jsonResponse['message'];
+          }
+          console.log(jsonResponse);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
   }
 };
@@ -43,6 +117,15 @@ const Login = {
   template: `
     <div class="login-form-container center-block">
       <h2>Please Log in</h2>
+      <div v-if=message class="flash">
+        {{ message }}
+      </div>
+      <ul v-if=errors class="text-white px-0">
+        <li v-for="error in errors" class="bg-danger flash">
+            {{ error }}
+        </li>
+        
+      </ul>
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
           <label for="username">Username</label><br>
@@ -57,7 +140,10 @@ const Login = {
     </div>
   `,
   data(){
-    return {}
+    return {
+      message: "",
+      errors: []
+    }
   },
   methods: {
     login_user() {
@@ -73,11 +159,16 @@ const Login = {
           credentials: 'same-origin'
       })
       .then(function (response) {
-          return response.text();
+          return response.json();
       })
       .then(function (jsonResponse) {
-          self.message = jsonResponse['message'];
-          token = jsonResponse['token'];
+          if (jsonResponse['token']){
+            app.token = jsonResponse['token'];
+            self.message = jsonResponse['message'];
+            self.$router.push('/explore')
+          } else {
+            self.errors = jsonResponse['error']
+          }
           console.log(jsonResponse);
       })
       .catch(function (error) {
@@ -138,8 +229,10 @@ const ViewProfile = {
 const NotFound = {
   name: 'NotFound',
   template: `
-  <div>
-      <h1>404 - Not Found</h1>
+  <div class="not-found">
+    <h1>404</h1>
+    <p>That page doesn't even exist.</p>
+    <p>Why don't you just <router-link to="/">go back home</router-link></p>
   </div>
   `,
   data() {

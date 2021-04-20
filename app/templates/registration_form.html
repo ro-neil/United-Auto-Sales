@@ -2,59 +2,43 @@
 
 {% block main %}
 
-<div class="container col-md-8 offset-md-2" id="property-page">
-    {% include "flash_messages.html" %}
-    <h1 class="font-weight-bold text-center registration-header">Add New Property</h1>
-    <form action="{{ url_for('register') }}" method="post" id='registration-form' enctype="multipart/form-data">
-        {{ form.csrf_token }}
-        <div class="form-group">
-            {{ form.title.label }}<span class="required-text"></span>
-            <br>
-            {{ form.title(class='form-control') }}
-        </div>
-        <div class="form-group">
-            {{ form.description.label }}<span class="required-text"></span>
-            <br>
-            {{ form.description(class='form-control') }}
-        </div>
-        <div class="form-row">
+<div class="container col-md-8 offset-md-2" id="registration-page">
+    <h1 class="font-weight-bold text-center registration-header">Register New User</h1>
+    <form method="post" @submit.prevent="register_user" id="registrationForm">
+        <div class="form-row">  
             <div class="form-group col-md-6 sm-padding-right">
-                {{ form.totalRooms.label }}<span class="required-text"></span>
-                <br>
-                {{ form.totalRooms(class='form-control') }}
+                <label for="username">Username</label><br>
+                <input type="text" name="username" class='form-control'/> 
             </div>
             <div class="form-group col-md-6">
-                {{ form.totalBathrooms.label }}<span class="required-text"></span>
-                <br>
-                {{ form.totalBathrooms(class='form-control') }}
+                <label for="password">Password</label><br>
+                <input type="password" name="password" class='form-control'/>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
-                {{ form.price.label }}<span class="required-text"></span>
-                <br>
-                {{ form.price(class='form-control') }}
+                <label for="fullname">Fullname</label><br>
+                <input type="text" name="fullname" class='form-control'/> 
             </div>
             <div class="form-group col-md-6">
-                {{ form.propertyType.label }}<span class="required-text"></span>
-                <br>
-                {{ form.propertyType(class='form-control') }}
+                <label for="email">Email</label><br>
+                <input type="text" name="email" class='form-control'/>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-6 sm-padding-right">
-                {{ form.location.label }}<span class="required-text"></span>
-                <br>
-                {{ form.location(class='form-control') }}
-            </div>
+        <div class="form-group col-md-6 sm-padding-right">
+            <label for="location">Location</label><br>
+            <input type="text" name="location" class='form-control'/>
         </div>
-        <div class="form-group custom-file">
-            {{ form.photo.label }}<span class="required-text"></span>
-            <br>
-            {{ form.photo(class="file-field") }}
+        <div class="form-group col-md-6">
+            <label for="biography">Biography</label><br>
+            <textarea cols="50" rows="2" name="biography" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="photo"><b>Upload Photo</b></label><br>
+            <input type="file" name="photo"/> 
         </div>
         <div class="text-center">
-            <button type="submit" id="submit-button" class="btn bg-info">Add Property</button>
+            <button type="submit" id="submit-button" class="btn bg-info">Register</button>
         </div>
     </form>
 </div>

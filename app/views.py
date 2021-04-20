@@ -33,11 +33,11 @@ def register():
 
     form = RegistrationForm()
 
-    if not form.validate_on_submit():   # remove not
+    if form.validate_on_submit():
         # include security checks #
         username = request.form['username']
         password = request.form['password']
-        name = request.form['name']
+        name = request.form['fullname']
         email = request.form['email']
         location = request.form['location']
         biography = request.form['biography']
@@ -55,8 +55,6 @@ def register():
         data = obj_to_dict(user)
         data.pop('password')
         response = jsonify(data)
-        flash('Registered successfully', 'success')
-        login_user(user)    # load user into session
         return response
     else:
         response = jsonify(form.errors)
@@ -69,7 +67,7 @@ def login():
     #     return redirect(url_for('secure_page'))
 
     form = LoginForm()
-    if form.validate_on_submit():   # remove not
+    if form.validate_on_submit():
         # include security checks #
         username = request.form['username']
         password = request.form['password']
@@ -80,8 +78,13 @@ def login():
         # validate the password and ensure that a user was found
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            flash(f'Hey, {username}!', 'success')
-            response = jsonify({"message": "Login Successful", 'token':''})
+            payload = {
+                "sub": "352741018090",
+                "name": username,
+                "issue": currentDate()
+            }
+            encoded_jwt = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+            response = jsonify({"message": "Login Successful", 'token':encoded_jwt})
             return response
         else:
             response = jsonify({'error':'Username or Password is incorrect.'})
@@ -133,7 +136,7 @@ def addCar():
 
     form = NewCarForm()
 
-    if not form.validate_on_submit():   # remove not
+    if form.validate_on_submit():
         # include security checks #
     
         description = request.form['description']
@@ -314,10 +317,10 @@ def add_header(response):
     return response
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    """Custom 404 page."""
-    return render_template('404.html'), 404
+# @app.errorhandler(404)
+# def page_not_found(error):
+#     """Custom 404 page."""
+#     return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
