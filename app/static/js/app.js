@@ -121,7 +121,8 @@ const app = Vue.createApp({
   },
   data() {
     return {
-      welcome: 'Hello World! Welcome to United Auto Sales'
+      welcome: 'Hello World! Welcome to United Auto Sales',
+      login: false
     }
   }
 });
@@ -140,27 +141,25 @@ app.component('app-header', {
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
     
-        <!--{% if current_user.is_authenticated %}-->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item" v-if="login">
             <router-link class="nav-link" to="/cars/new">Add Car</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="login">
           <router-link class="nav-link" to="/explore">Explore</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="login">
           <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
           </li>
         </ul>
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav"  v-if="login">
           <li class="nav-item">
           <router-link class="nav-link" to="/logout">Logout</router-link>
           </li>
         </ul>
-        <!--{% else %} -->
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav"  v-if="!login">
           <li class="nav-item active">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
