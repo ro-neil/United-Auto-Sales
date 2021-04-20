@@ -15,6 +15,7 @@ from flask.json import jsonify
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
+import jwt
 from sqlalchemy import and_
 
 
