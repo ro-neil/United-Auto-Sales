@@ -68,15 +68,14 @@ def login():
     #     return redirect(url_for('secure_page'))
 
     form = LoginForm()
-
-    if not form.validate_on_submit():   # remove not
+    if form.validate_on_submit():   # remove not
         # include security checks #
         username = request.form['username']
         password = request.form['password']
 
         # db access
         user = User.query.filter_by(username=username).first()
-
+ 
         # validate the password and ensure that a user was found
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
@@ -244,7 +243,7 @@ def getFavourites(user_id):
 
 
 @app.route('/secure-page')
-@login_required
+# @login_required
 def secure_page():
     """Render a page on our website that only logged in users can access."""
     return render_template('secure_page.html')
@@ -264,29 +263,6 @@ def index(path):
     Also we will render the initial webpage and then let VueJS take control.
     """
     return render_template('index.html')
-
-
-##############
-# Vue Routes #
-##############
-
-# @app.route('/home')
-# def home():
-#     return render_template('home.html')
-
-# @app.route('/register')
-# def registrationForm():
-#     return render_template('home.html')
-
-# @app.route('/login')
-# def vueLogin():
-#     return render_template('login.html')
-
-# @app.route('/logout')
-# def vueLogout():
-#     logout_user()
-#     flash('You have been logged out.', 'danger')
-#     return redirect(url_for('home'))
 
 
 # user_loader callback. This callback is used to reload the user object from

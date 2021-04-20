@@ -41,13 +41,48 @@ const Register = {
 const Login = {
   name: 'Login',
   template: `
-      <div class="login text-center">
-        <h1>{{ welcome }}</h1>
-      </div>
+    <div class="login-form-container center-block">
+      <h2>Please Log in</h2>
+      <form method="post" @submit.prevent="login_user" id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label><br>
+          <input type="text" name="username" class='form-control'/> 
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label><br>
+          <input type="password" name="password" class='form-control'/> 
+        </div>
+        <button type="submit" name="submit-btn" class="btn btn-primary btn-block">Login</button>
+      </form>
+    </div>
   `,
   data(){
-    return {
-      welcome: '<Login form goes here>'
+    return {}
+  },
+  methods: {
+    login_user() {
+      let loginForm = document.getElementById('loginForm');
+      let form_data = new FormData(loginForm);
+      let self = this;
+      fetch("/api/auth/login", {
+          method: 'POST',
+          body: form_data,
+          headers: {
+              'X-CSRFToken': csrf_token
+          },
+          credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.text();
+      })
+      .then(function (jsonResponse) {
+          self.message = jsonResponse['message'];
+          token = jsonResponse['token'];
+          console.log(jsonResponse);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
   }
 };
@@ -122,7 +157,8 @@ const app = Vue.createApp({
   data() {
     return {
       welcome: 'Hello World! Welcome to United Auto Sales',
-      login: false
+      login_flag: false,
+      token: ''
     }
   }
 });
@@ -153,7 +189,7 @@ app.component('app-header', {
           </li>
         </ul>
 
-        <ul class="navbar-nav"  v-if="login">
+        <ul class="navbar-nav" v-if="login">
           <li class="nav-item">
           <router-link class="nav-link" to="/logout">Logout</router-link>
           </li>
@@ -167,10 +203,17 @@ app.component('app-header', {
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
         </ul>
-        <!--{# {% endif %} #}-->
+  
       </div>
     </nav>
-  `
+  `,
+  data() {
+    return {
+      welcome: 'Hello World! Welcome to United Auto Sales',
+      login: app.login_flag,
+      token: ''
+    }
+  }
 });
 
 app.component('app-footer', {
