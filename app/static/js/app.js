@@ -126,8 +126,8 @@ const Login = {
         {{ message }}
       </div>
       <ul v-if=errors class="text-white px-0">
-        <li v-for="error in errors" class="bg-danger flash">
-            {{ error }}
+        <li v-for="(key,value) in errors" class="bg-danger flash">
+            {{ value }}
         </li>
         
       </ul>
@@ -200,10 +200,13 @@ const Explore = {
   template: `
   <div>
       <h1>Explore</h1>
+      token: {{ token }}
   </div>
   `,
   data() {
-      return {}
+      return {
+        token : app.token
+      }
   }
 };
 
@@ -255,7 +258,6 @@ const app = Vue.createApp({
   data() {
     return {
       welcome: 'Hello World! Welcome to United Auto Sales',
-      login_flag: false,
       token: ''
     }
   }
@@ -274,26 +276,25 @@ app.component('app-header', {
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item" v-if="login">
+          <li class="nav-item" v-if=token>
             <router-link class="nav-link" to="/cars/new">Add Car</router-link>
           </li>
-          <li class="nav-item" v-if="login">
+          <li class="nav-item" v-if=token>
           <router-link class="nav-link" to="/explore">Explore</router-link>
           </li>
-          <li class="nav-item" v-if="login">
+          <li class="nav-item" v-if=token>
           <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
           </li>
         </ul>
 
-        <ul class="navbar-nav" v-if="login">
+        <ul class="navbar-nav" v-if=token>
           <li class="nav-item">
           <router-link class="nav-link" to="/logout">Logout</router-link>
           </li>
         </ul>
 
-        <ul class="navbar-nav"  v-if="!login">
+        <ul class="navbar-nav"  v-if=!token>
           <li class="nav-item active">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
@@ -308,8 +309,7 @@ app.component('app-header', {
   data() {
     return {
       welcome: 'Hello World! Welcome to United Auto Sales',
-      login: app.login_flag,
-      token: ''
+      token: app.token
     }
   }
 });
