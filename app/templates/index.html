@@ -2,15 +2,14 @@
 
 {% block main %}
 <div id="app">
-    <app-header></app-header>
-
+    {% block header %}<app-header></app-header>{% endblock %}
+    
     <main>
         <div class="container">
             <!-- component matched by the route will render here -->
             <router-view></router-view>
         </div>
     </main>
-
-    <app-footer></app-footer>
+    {% block footer %}{% endblock %}
 </div>
 {% endblock %}

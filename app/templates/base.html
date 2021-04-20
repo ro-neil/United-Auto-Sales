@@ -21,7 +21,7 @@
   </head>
   <body>
     <header>
-        {% include "header.html" %}
+      {% block header %}{% endblock %}
     </header>
     <main>
         <div class="container">
@@ -30,7 +30,7 @@
     </main>
     <footer>
         <div class="container">
-            {% include "footer.html" %}
+          {% block footer %}{% endblock %}
         </div>
     </footer>
 
