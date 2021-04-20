@@ -48,6 +48,9 @@ def register():
 
         # db access
         user = User(username, password, name, email, location, biography, photo_name, date_joined)
+        if User.query.filter_by(username=username).first(): # if username already exist
+            response = jsonify({'error':'Try a different username or contact the administrator.'})
+            return response
         db.session.add(user)
         db.session.commit()
 
@@ -74,7 +77,7 @@ def login():
 
         # db access
         user = User.query.filter_by(username=username).first()
- 
+    
         # validate the password and ensure that a user was found
         if user is not None and check_password_hash(user.password, password):
             login_user(user)

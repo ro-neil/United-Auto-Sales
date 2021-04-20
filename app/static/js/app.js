@@ -29,31 +29,36 @@ const Register = {
   template: `
       <div class="container col-md-8 offset-md-2" id="registration-page">
       <h1 class="font-weight-bold text-center registration-header">Register New User</h1>
+      <ul v-if=errors class="pl-0">
+        <li v-for="(key,value) in errors" class="flash bg-danger">
+          {{ key }}
+        </li>
+      </ul>
       <form method="post" @submit.prevent="register_user" id="registrationForm">
           <div class="form-row">  
               <div class="form-group col-md-6 sm-padding-right">
                   <label for="username">Username</label><br>
-                  <input type="text" name="username" class='form-control'/> 
+                  <input type="text" name="username" class='form-control' required/> 
               </div>
               <div class="form-group col-md-6">
                   <label for="password">Password</label><br>
-                  <input type="password" name="password" class='form-control'/>
+                  <input type="password" name="password" class='form-control' required/>
               </div>
           </div>
           <div class="form-row">
               <div class="form-group col-md-6 sm-padding-right">
                   <label for="fullname">Fullname</label><br>
-                  <input type="text" name="fullname" class='form-control'/> 
+                  <input type="text" name="fullname" class='form-control' required/> 
               </div>
               <div class="form-group col-md-6">
                   <label for="email">Email</label><br>
-                  <input type="text" name="email" class='form-control'/>
+                  <input type="text" name="email" class='form-control' required/>
               </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
               <label for="location">Location</label><br>
-              <input type="text" name="location" class='form-control'/>
+              <input type="text" name="location" class='form-control' required/>
             </div>
             <div class="form-group col-md-6">
               
@@ -61,11 +66,11 @@ const Register = {
           </div>
           <div class="form-group">
               <label for="biography">Biography</label><br>
-              <textarea cols="50" rows="2" name="biography" class="form-control"></textarea>
+              <textarea cols="50" rows="2" name="biography" class="form-control" required></textarea>
           </div>
           <div class="form-group">
               <label for="photo"><b>Upload Photo</b></label><br>
-              <input type="file" name="photo"/> 
+              <input type="file" name="photo" required/> 
           </div>
           <div class="text-center">
               <button type="submit" id="submit-button" class="btn bg-info">Register</button>
@@ -76,7 +81,7 @@ const Register = {
   data(){
     return {
       user_data: '',
-      message: ''
+      errors: {}
     }
   },
   methods: {
@@ -93,15 +98,15 @@ const Register = {
           credentials: 'same-origin'
       })
       .then(function (response) {
-          return response.text();
+          return response.json();
       })
       .then(function (jsonResponse) {
           
-          if (jsonResponse['username']){  // if no error
+          if (jsonResponse['id'] && jsonResponse['date_joined']){  // if successful
             self.$router.push('/login')
             self.user_data = jsonResponse
-          } else {
-            self.message = jsonResponse['message'];
+          } else if (jsonResponse['error']){
+            self.errors = jsonResponse
           }
           console.log(jsonResponse);
       })
