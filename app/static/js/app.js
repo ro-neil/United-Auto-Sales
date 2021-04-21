@@ -220,9 +220,66 @@ const Logout = {
 const AddCar = {
   name: 'AddCar',
   template: `
-  <div>
-      <h1>Add Car</h1>
-  </div>
+    <div class="container col-md-8 offset-md-2" id="addCar-page">
+      <h1 class="font-weight-bold text-center addCar-header">Add New Car</h1>
+      <ul v-if=errors class="pl-0">
+        <li v-for="(key,value) in errors" class="flash bg-danger">
+          {{ key }}
+        </li>
+      </ul>
+      <form method="post" @submit.prevent="add_car" id="addCarForm">
+          <div class="form-row">  
+              <div class="form-group col-md-6 sm-padding-right">
+                  <label for="make">Make</label><br>
+                  <input type="text" name="make" class='form-control' required/> 
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="model">Model</label><br>
+                  <input type="text" name="model" class='form-control' required/>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6 sm-padding-right">
+                  <label for="colour">Colour</label><br>
+                  <input type="text" name="colour" class='form-control' required/> 
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="year">Year</label><br>
+                  <input type="number" name="year" class='form-control' required/>
+              </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 sm-padding-right">
+              <label for="price">Price</label><br>
+              <input type="number" name="price" class='form-control' required/>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="carType">Car Type</label><br>
+              <input type="text" name="carType" class='form-control' required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 sm-padding-right">
+              <label for="transmission">Transmission</label><br>
+              <input type="text" name="transmission" class='form-control' required/>
+            </div>
+            <div class="form-group col-md-6">
+            
+            </div>
+          </div>
+          <div class="form-group">
+              <label for="description">Description</label><br>
+              <textarea cols="50" rows="2" name="description" class="form-control" required></textarea>
+          </div>
+          <div class="form-group">
+              <label for="photo"><b>Upload Photo</b></label><br>
+              <input type="file" name="photo" required/> 
+          </div>
+          <div class="text-center">
+              <button type="submit" id="submit-button" class="btn bg-info">Save</button>
+          </div>
+      </form>
+    </div>
   `,
   data() {
       return {}
@@ -231,6 +288,36 @@ const AddCar = {
     this.update_navbar();
   },
   methods: {
+    add_car(){
+      let form = document.getElementById('addCarForm');
+      let form_data = new FormData(form);
+      let self = this;
+      fetch("/api/cars", {
+          method: 'POST',
+          body: form_data,
+          headers: {
+              'X-CSRFToken': csrf_token,
+              'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+          },
+          credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          
+          if (jsonResponse['user_id'] && jsonResponse['transmission']){  // if successful
+            self.$router.push('/explore')
+            self.car_data = jsonResponse
+          } else if (jsonResponse['error']){
+            self.errors = jsonResponse
+          }
+          console.log(jsonResponse);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    },
     update_navbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
