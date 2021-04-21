@@ -128,8 +128,7 @@ const Login = {
       <ul v-if=errors class="text-white px-0">
         <li v-for="(key,value) in errors" class="bg-danger flash">
             {{ value }}
-        </li>
-        
+        </li> 
       </ul>
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
@@ -147,7 +146,8 @@ const Login = {
   data(){
     return {
       message: "",
-      errors: []
+      errors: [],
+      state: false
     }
   },
   methods: {
@@ -168,17 +168,52 @@ const Login = {
       })
       .then(function (jsonResponse) {
           if (jsonResponse['token']){
-            app.token = jsonResponse['token'];
-            self.message = jsonResponse['message'];
-            self.$router.push('/explore')
+            if (typeof(Storage) !== "undefined") {
+              localStorage.setItem('united_auto_sales_token', jsonResponse['token']);
+            } else {
+              console.log('No Web Storage support..');
+            }
+            self.message = jsonResponse['message'];        
+            self.$router.push('/explore');
+            self.update_navbar();
           } else {
-            self.errors = jsonResponse['error']
+            self.errors = jsonResponse['error'];
           }
           console.log(jsonResponse);
       })
       .catch(function (error) {
           console.log(error);
       });
+    },
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+      
+    }
+  }
+};
+
+const Logout = {
+  name: 'Logout',
+  template: `
+  `,
+  created(){
+    this.$router.push('/');
+    this.update_navbar()
+  },
+  data() {
+      return {}
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.remove('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.add('d-none');
+      }
     }
   }
 };
@@ -200,12 +235,10 @@ const Explore = {
   template: `
   <div>
       <h1>Explore</h1>
-      token: {{ token }}
   </div>
   `,
   data() {
       return {
-        token : app.token
       }
   }
 };
@@ -277,24 +310,24 @@ app.component('app-header', {
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item" v-if=token>
+          <li class="nav-item d-none dynamic-link">
             <router-link class="nav-link" to="/cars/new">Add Car</router-link>
           </li>
-          <li class="nav-item" v-if=token>
+          <li class="nav-item d-none dynamic-link">
           <router-link class="nav-link" to="/explore">Explore</router-link>
           </li>
-          <li class="nav-item" v-if=token>
+          <li class="nav-item d-none dynamic-link">
           <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
           </li>
         </ul>
 
-        <ul class="navbar-nav" v-if=token>
-          <li class="nav-item">
+        <ul class="navbar-nav d-none dynamic-link">
+          <li class="nav-item active">
           <router-link class="nav-link" to="/logout">Logout</router-link>
           </li>
         </ul>
 
-        <ul class="navbar-nav"  v-if=!token>
+        <ul id="logged-out" class="navbar-nav">
           <li class="nav-item active">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
@@ -309,7 +342,7 @@ app.component('app-header', {
   data() {
     return {
       welcome: 'Hello World! Welcome to United Auto Sales',
-      token: app.token
+      token: localStorage.getItem('united_auto_sales_token'),
     }
   }
 });
@@ -340,7 +373,7 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/cars/new', component: AddCar },
     { path: '/explore', component: Explore },
-    { path: '/logout', component: Home },
+    { path: '/logout', component: Logout },
     { path: '/cars/:car_id', component: ViewCar },
     { path: '/users/:user_id', component: ViewProfile },
 
