@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, IntegerField
 from wtforms.validators import InputRequired, DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -21,15 +21,21 @@ class RegistrationForm(FlaskForm):
     ])
 
 class NewCarForm(FlaskForm):
-    title = StringField('Property Title', validators=[DataRequired()])
+    make = StringField('Make', validators=[DataRequired()])
+    model = StringField('Model', validators=[DataRequired()])
+    colour = StringField('Colour', validators=[DataRequired()])
+    year = IntegerField('Year', validators=[DataRequired()])
+    price = IntegerField('Price', validators=[DataRequired()])
+    carType = SelectField('Car Type',
+        choices=['SUV', 'Sedan','Coupe','Hatchback','Van','Minivan','Pickup','Convertable','Wagon','Truck', ],
+        validators=[DataRequired()]
+    )
+    transmission = SelectField('Transmission',
+        choices=['Automatic', 'Manual'],
+        validators=[DataRequired()]
+    )
     description = TextAreaField('Description', validators=[DataRequired()])
-    totalRooms = StringField('No. of Rooms', validators=[DataRequired()])
-    totalBathrooms = StringField('No. of Bathrooms', validators=[DataRequired()])
-    price = StringField('Price', validators=[DataRequired()])
-    propertyType = SelectField('Property Type', choices=['House', 'Apartment'], validators=[DataRequired()])
-    location = StringField('Location', validators=[DataRequired()])
-    photo = FileField('Photo', validators=[
-        FileRequired(),
-        FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')
-    ])
+    photo = FileField('Photo',
+        validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')]
+    )
 

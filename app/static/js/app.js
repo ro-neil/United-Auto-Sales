@@ -52,7 +52,7 @@ const Register = {
               </div>
               <div class="form-group col-md-6">
                   <label for="email">Email</label><br>
-                  <input type="text" name="email" class='form-control' required/>
+                  <input type="email" name="email" class='form-control' required/>
               </div>
           </div>
           <div class="form-row">
@@ -255,13 +255,27 @@ const AddCar = {
             </div>
             <div class="form-group col-md-6">
               <label for="carType">Car Type</label><br>
-              <input type="text" name="carType" class='form-control' required/>
+              <select name="carType" id="carType" form="addCarForm" class="w-100">
+                <option value="SUV">SUV</option>
+                <option value="Sedan">Sedan</option>
+                <option value="Coupe">Coupe</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Van">Van</option>
+                <option value="Minivan">Minivan</option>
+                <option value="Pickup">Hatchback</option>
+                <option value="Convertable">Convertable</option>
+                <option value="Wagon">Wagon</option>
+                <option value="Truck">Truck</option>
+              </select>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
               <label for="transmission">Transmission</label><br>
-              <input type="text" name="transmission" class='form-control' required/>
+              <select name="transmission" id="transmissionType" form="addCarForm" class="w-100">
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+              </select>
             </div>
             <div class="form-group col-md-6">
             
