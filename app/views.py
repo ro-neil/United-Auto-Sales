@@ -98,7 +98,7 @@ def login():
 
 
 @app.route("/api/auth/logout", methods=["POST"])
-# @login_required
+@requires_auth
 def logout():
     """Logs out the user and ends the session"""
 
@@ -113,7 +113,7 @@ def logout():
 
 
 @app.route("/api/cars", methods=["GET"])
-# @login_required
+@requires_auth
 def getCars():
     """ Get a list of all cars available for sale """
 
@@ -130,7 +130,7 @@ def getCars():
 
 
 @app.route("/api/cars", methods=["POST"])
-# @login_required
+@requires_auth
 def addCar():
     """ Add a new car """
 
@@ -162,7 +162,6 @@ def addCar():
 
         # convert sqlalchemy car object to dictionary object for JSON parsing
         response = jsonify(obj_to_dict(car))
-        flash('Car added successfully', 'success')
         return response
     else:
         response = jsonify(form.errors)
@@ -270,6 +269,41 @@ def index(path):
     Also we will render the initial webpage and then let VueJS take control.
     """
     return render_template('index.html')
+
+
+# Create a JWT @requires_auth decorator
+# This decorator can be used to denote that a specific route should check
+# for a valid JWT token before displaying the contents of that route.
+def requires_auth(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    auth = request.headers.get('Authorization', None) # or request.cookies.get('token', None)
+
+    if not auth:
+      return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
+
+    parts = auth.split()
+
+    if parts[0].lower() != 'bearer':
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
+    elif len(parts) == 1:
+      return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
+    elif len(parts) > 2:
+      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
+
+    token = parts[1]
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
+    except jwt.DecodeError:
+        return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
+
+    g.current_user = user = payload
+    return f(*args, **kwargs)
+
+  return decorated
 
 
 # user_loader callback. This callback is used to reload the user object from
