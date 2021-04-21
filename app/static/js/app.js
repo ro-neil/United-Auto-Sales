@@ -245,7 +245,7 @@ const AddCar = {
               </div>
               <div class="form-group col-md-6">
                   <label for="year">Year</label><br>
-                  <input type="number" name="year" class='form-control' required/>
+                  <input type="text" name="year" class='form-control' required/>
               </div>
           </div>
           <div class="form-row">

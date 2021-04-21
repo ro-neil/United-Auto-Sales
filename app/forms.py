@@ -24,7 +24,7 @@ class NewCarForm(FlaskForm):
     make = StringField('Make', validators=[DataRequired()])
     model = StringField('Model', validators=[DataRequired()])
     colour = StringField('Colour', validators=[DataRequired()])
-    year = IntegerField('Year', validators=[DataRequired()])
+    year = StringField('Year', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
     carType = SelectField('Car Type',
         choices=['SUV', 'Sedan','Coupe','Hatchback','Van','Minivan','Pickup','Convertable','Wagon','Truck', ],
