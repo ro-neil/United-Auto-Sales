@@ -191,7 +191,6 @@ const Login = {
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
       }
-      
     }
   }
 };
@@ -227,6 +226,18 @@ const AddCar = {
   `,
   data() {
       return {}
+  },
+  created(){
+    this.update_navbar();
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+    }
   }
 };
 
@@ -240,6 +251,18 @@ const Explore = {
   data() {
       return {
       }
+  },
+  created(){
+    this.update_navbar();
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+    }
   }
 };
 
@@ -252,6 +275,18 @@ const ViewCar = {
   `,
   data() {
       return {}
+  },
+  created(){
+    this.update_navbar();
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+    }
   }
 };
 
@@ -264,6 +299,18 @@ const ViewProfile = {
   `,
   data() {
       return {}
+  },
+  created(){
+    this.update_navbar();
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+    }
   }
 };
 
@@ -278,6 +325,18 @@ const NotFound = {
   `,
   data() {
       return {}
+  },
+  created(){
+    this.update_navbar();
+  },
+  methods: {
+    update_navbar(){
+      document.getElementById('logged-out').classList.add('d-none');
+      let navItems = document.getElementsByClassName('dynamic-link');
+      for (let element = 0; element < navItems.length; element++) {
+        navItems[element].classList.remove('d-none');
+      }
+    }
   }
 };
 
