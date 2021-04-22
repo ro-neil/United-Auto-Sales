@@ -233,19 +233,19 @@ def addFavourite(car_id):
 
 
 @app.route("/api/search", methods=["GET"])
-# @login_required
+@requires_auth
 def search():
     """ Search for cars based on their make or model """
 
     # include security checks #
     make = request.args.get('make')
     model = request.args.get('model')
-
-    if make is not None and model is not None:
+    
+    if make and model:
         cars = Car.query.filter_by(make=make, model=model)
-    elif make is not None:
+    elif make:
         cars = Car.query.filter_by(make=make)
-    elif model is not None:
+    elif model:
         cars = Car.query.filter_by(model=model)
 
     data = []

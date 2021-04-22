@@ -340,7 +340,7 @@ const Explore = {
   template: `
     <div class="explore px-5">
       <h2>Explore</h2>
-      <form class="form-inline d-flex bg-white rounded p-4 justify-content-around">
+      <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around">
         <label class="sr-only" for="search-bar-container">Search</label>
         <div class="make-component mr-2">
             <label class="make-label" for="make">Make</label>
@@ -350,7 +350,7 @@ const Explore = {
             <label class="model-label" for="model">Model</label>
             <input type="search" name="model" v-model="model_searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
         </div>
-        <button class="btn search-btn align-self-end mb-2 px-5 bg-success text-white" @click="">Search</button> 
+        <button type="submit" class="btn search-btn align-self-end mb-2 px-5 bg-success text-white">Search</button> 
       <!--
         <div class="form-group d-flex search-bar-container" name="search-bar-container">
           
@@ -359,9 +359,10 @@ const Explore = {
       </form>
 
 
-      <!-- HOW CAN BOTH PATHS BE THE SAME? -->
+      <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE? -->
       <a href="static/black_hilux.jpg">path1 </a>
       <a href="../static/black_hilux.jpg">path2</a>
+   
 
       <div class="cars">
           <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
@@ -389,14 +390,6 @@ const Explore = {
       </div>
     </div>
   `,
-  data() {
-      return {
-        car_data: [],
-        make_searchTerm: '',
-        model_searchTerm: '',
-        uploads: '../../../uploads/cars/'
-      }
-  },
   created(){
     this.update_navbar();
     let self = this;
@@ -412,8 +405,7 @@ const Explore = {
         return response.json();
     })
     .then(function (jsonResponse) {
-        self.car_data = jsonResponse
-        console.log(jsonResponse);
+        self.car_data = jsonResponse;
     })
     .catch(function (error) {
         console.log(error);
@@ -426,6 +418,35 @@ const Explore = {
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
       }
+    },
+    search(){
+      let self = this;
+      fetch("/api/search?make="+self.make_searchTerm+'&model='+self.model_searchTerm, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          self.car_data = jsonResponse;
+          console.log(jsonResponse);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+  },
+  data() {
+    return {
+      car_data: [],
+      make_searchTerm: '',
+      model_searchTerm: '',
+      uploads: '../../../uploads/cars/'
     }
   }
 };
