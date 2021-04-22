@@ -146,7 +146,7 @@ def logout():
 
 
 @app.route("/api/cars", methods=["GET"])
-# @requires_auth
+@requires_auth
 def getCars():
     """ Get a list of all cars available for sale """
 
@@ -206,7 +206,7 @@ def addCar():
 
 
 @app.route("/api/cars/<int:car_id>", methods=["GET"])
-# @login_required
+@requires_auth
 def getCar(car_id):
     """ View details of a specific car """
 
@@ -217,7 +217,7 @@ def getCar(car_id):
 
 
 @app.route("/api/cars/<int:car_id>/favourite", methods=["POST"])
-# @login_required
+@requires_auth
 def addFavourite(car_id):
     """ Favourites a specific car """
 
@@ -234,6 +234,7 @@ def addFavourite(car_id):
 
 @app.route("/api/search", methods=["GET"])
 @requires_auth
+@login_required
 def search():
     """ Search for cars based on their make or model """
 
@@ -255,7 +256,7 @@ def search():
 
 
 @app.route("/api/users/<int:user_id>", methods=["GET"])
-# @login_required
+@login_required
 def getUser(user_id):
     """ Get details for a specific user """
 
@@ -270,7 +271,7 @@ def getUser(user_id):
 
 
 @app.route("/api/users/<int:user_id>/favourites", methods=["GET"])
-# @login_required
+@requires_auth
 def getFavourites(user_id):
     """ Get the cars favourited by a user """
     favourites = Favourite.query.filter_by(user_id=user_id).all()
@@ -284,12 +285,6 @@ def getFavourites(user_id):
         data.append(obj_to_dict(car))
     return jsonify(data)
 
-
-@app.route('/secure-page')
-# @login_required
-def secure_page():
-    """Render a page on our website that only logged in users can access."""
-    return render_template('secure_page.html')
 
 
 # Please create all new routes and view functions above this route.

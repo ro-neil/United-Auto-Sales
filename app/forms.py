@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SelectField, IntegerField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, DecimalField
 from wtforms.validators import InputRequired, DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -25,7 +25,7 @@ class NewCarForm(FlaskForm):
     model = StringField('Model', validators=[DataRequired()])
     colour = StringField('Colour', validators=[DataRequired()])
     year = StringField('Year', validators=[DataRequired()])
-    price = IntegerField('Price', validators=[DataRequired()])
+    price = DecimalField('Price', validators=[DataRequired()])
     carType = SelectField('Car Type',
         choices=['SUV', 'Sedan','Coupe','Hatchback','Van','Minivan','Pickup','Convertable','Wagon','Truck', ],
         validators=[DataRequired()]

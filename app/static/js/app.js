@@ -246,7 +246,7 @@ const AddCar = {
           <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
               <label for="price">Price</label><br>
-              <input type="number" name="price" class='form-control' required/>
+              <input type="number" step="any" name="price" class='form-control' required/>
             </div>
             <div class="form-group col-md-6">
               <label for="carType">Car Type</label><br>
@@ -596,7 +596,7 @@ app.component('app-footer', {
     template: 
     `
     <footer>
-        <div class="container">
+        <div class="container m-4">
         <!-- Footer content goes here -->
         </div>
     </footer>
