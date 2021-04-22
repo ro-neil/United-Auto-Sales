@@ -140,7 +140,6 @@ def logout():
     except Exception:
         return 'Access token is missing or invalid, 401'
 
-    flash('You have been logged out', 'danger')
     response = jsonify({"message": "Log out successful"})
     return response
 

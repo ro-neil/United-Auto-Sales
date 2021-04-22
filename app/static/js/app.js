@@ -200,11 +200,37 @@ const Logout = {
   template: `
   `,
   created(){
-    this.$router.push('/');
-    this.update_navbar()
+    if (!this.token){
+      this.$router.push({name: "not-found"})
+      return
+    }
+    let self = this;
+    fetch("/api/auth/logout", {
+      method: 'POST',
+      headers: {
+          'X-CSRFToken': csrf_token,
+          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+      },
+      credentials: 'same-origin'
+    })
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (jsonResponse) {
+        self.$router.push('/');
+        self.update_navbar();
+        localStorage.removeItem('united_auto_sales_token');
+        self.message = jsonResponse['message'];
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
   },
   data() {
-      return {}
+      return {
+        message: '',
+        token: localStorage.getItem('united_auto_sales_token')
+      }
   },
   methods: {
     update_navbar(){
@@ -220,7 +246,7 @@ const Logout = {
 const AddCar = {
   name: 'AddCar',
   template: `
-    <div class="container col-md-8 offset-md-2" id="addCar-page">
+    <div v-if=token class="container col-md-8 offset-md-2" id="addCar-page">
       <h1 class="font-weight-bold text-center addCar-header">Add New Car</h1>
       <form method="post" @submit.prevent="add_car" id="addCarForm">
           <div class="form-row">  
@@ -291,13 +317,23 @@ const AddCar = {
     </div>
   `,
   data() {
-      return {}
+      return {
+        token: localStorage.getItem('united_auto_sales_token')
+      }
   },
   created(){
+    if (!this.token){
+      this.$router.push({name: "not-found"})
+      return
+    }
     this.update_navbar();
   },
   methods: {
     add_car(){
+      if (!self.token){
+        self.$router.push({name: "not-found"})
+        return
+      }
       let form = document.getElementById('addCarForm');
       let form_data = new FormData(form);
       let self = this;
@@ -338,7 +374,7 @@ const AddCar = {
 const Explore = {
   name: 'Explore',
   template: `
-    <div class="explore px-5">
+    <div v-if=token class="explore px-5">
       <h2>Explore</h2>
       <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -391,6 +427,10 @@ const Explore = {
     </div>
   `,
   created(){
+    if (!this.token){
+      this.$router.push({name: "not-found"})
+      return
+    }
     this.update_navbar();
     let self = this;
     fetch("/api/cars", {
@@ -446,7 +486,8 @@ const Explore = {
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
-      uploads: '../../../uploads/cars/'
+      uploads: '../../../uploads/cars/',
+      token: localStorage.getItem('united_auto_sales_token')
     }
   }
 };
@@ -512,7 +553,9 @@ const NotFound = {
       return {}
   },
   created(){
-    this.update_navbar();
+    if (this.token){
+      this.update_navbar();
+    }
   },
   methods: {
     update_navbar(){
