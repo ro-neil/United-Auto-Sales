@@ -146,7 +146,7 @@ def logout():
 
 
 @app.route("/api/cars", methods=["GET"])
-@requires_auth
+# @requires_auth
 def getCars():
     """ Get a list of all cars available for sale """
 
@@ -181,7 +181,7 @@ def addCar():
         colour = request.form['colour']
         year = request.form['year']
         transmission = request.form['transmission']
-        car_type = request.form['car_type']
+        carType = request.form['carType']
         photo = request.files['photo']
         photo_name = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['CARS_FOLDER'], photo_name))
@@ -189,12 +189,16 @@ def addCar():
         price = float(request.form['price'])
 
         # db access
-        car = Car(description, make, model, colour, year, transmission, car_type, photo_name, user_id, price)
+        car = Car(description, make, model, colour, year, transmission, carType, photo_name, user_id, price)
         db.session.add(car)
         db.session.commit()
 
         # convert sqlalchemy car object to dictionary object for JSON parsing
-        response = jsonify(obj_to_dict(car))
+        car = obj_to_dict(car)
+        car.pop('id')   # remove id
+        carType = car.pop('car_type')
+        car['type'] = carType   # change key 'car_type' to 'type'
+        response = jsonify(car)
         return response
     else:
         response = jsonify(form.errors)

@@ -222,11 +222,6 @@ const AddCar = {
   template: `
     <div class="container col-md-8 offset-md-2" id="addCar-page">
       <h1 class="font-weight-bold text-center addCar-header">Add New Car</h1>
-      <ul v-if=errors class="pl-0">
-        <li v-for="(key,value) in errors" class="flash bg-danger">
-          {{ key }}
-        </li>
-      </ul>
       <form method="post" @submit.prevent="add_car" id="addCarForm">
           <div class="form-row">  
               <div class="form-group col-md-6 sm-padding-right">
@@ -262,7 +257,7 @@ const AddCar = {
                 <option value="Hatchback">Hatchback</option>
                 <option value="Van">Van</option>
                 <option value="Minivan">Minivan</option>
-                <option value="Pickup">Hatchback</option>
+                <option value="Pickup">Pickup</option>
                 <option value="Convertable">Convertable</option>
                 <option value="Wagon">Wagon</option>
                 <option value="Truck">Truck</option>
@@ -323,8 +318,6 @@ const AddCar = {
           if (jsonResponse['user_id'] && jsonResponse['transmission']){  // if successful
             self.$router.push('/explore')
             self.car_data = jsonResponse
-          } else if (jsonResponse['error']){
-            self.errors = jsonResponse
           }
           console.log(jsonResponse);
       })
@@ -345,16 +338,86 @@ const AddCar = {
 const Explore = {
   name: 'Explore',
   template: `
-  <div>
-      <h1>Explore</h1>
-  </div>
+    <div class="explore px-5">
+      <h2>Explore</h2>
+      <form class="form-inline d-flex bg-white rounded p-4 justify-content-around">
+        <label class="sr-only" for="search-bar-container">Search</label>
+        <div class="make-component mr-2">
+            <label class="make-label" for="make">Make</label>
+            <input type="search" name="make" v-model="make_searchTerm" id="search-make" class="form-control mb-2 mr-sm-2" placeholder="" />
+        </div>
+        <div class="model-component mr-2">
+            <label class="model-label" for="model">Model</label>
+            <input type="search" name="model" v-model="model_searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
+        </div>
+        <button class="btn search-btn align-self-end mb-2 px-5 bg-success text-white" @click="">Search</button> 
+      <!--
+        <div class="form-group d-flex search-bar-container" name="search-bar-container">
+          
+        </div>
+        -->
+      </form>
+
+
+      <!-- HOW CAN BOTH PATHS BE THE SAME? -->
+      <a href="static/black_hilux.jpg">path1 </a>
+      <a href="../static/black_hilux.jpg">path2</a>
+
+      <div class="cars">
+          <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
+              <div class="col">
+                  <div class="card h-100">
+                      <!-- {{ uploads }}{{ car['photo'] }} -->
+                      <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+                   
+                      <div class="card-body">
+                        <div class="d-flex">
+                          <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
+                          <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                            <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                            <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                          </div>
+                        </div>
+                        <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
+                      </div>
+                      <div class="card-footer text-center bg-info">
+                          View more details
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
   `,
   data() {
       return {
+        car_data: [],
+        make_searchTerm: '',
+        model_searchTerm: '',
+        uploads: '../../../uploads/cars/'
       }
   },
   created(){
     this.update_navbar();
+    let self = this;
+    fetch("/api/cars", {
+      method: 'GET',
+      headers: {
+          'X-CSRFToken': csrf_token,
+          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+      },
+      credentials: 'same-origin'
+    })
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (jsonResponse) {
+        self.car_data = jsonResponse
+        console.log(jsonResponse);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
   },
   methods: {
     update_navbar(){
