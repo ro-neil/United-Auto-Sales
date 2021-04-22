@@ -3,22 +3,51 @@
 body {
     box-sizing: border-box;
     margin: 0;
-    padding-top: 5rem;
+    padding-top: 1em;
     font-family: Ubuntu, sans-serif;
     background-color: #f0f0f0;
 }
 
 .section1{
     width: 100%;
+    text-align: left;
+    text-decoration: solid;
+    padding-top: 10rem;
+    margin-left: 80px;
+    margin-right: 80px;
 }
 
+    
+h1{
+    font-weight:bold;
+}
+.navbar.navbar-expand-lg.navbar-dark.bg-primary.fixed-top{
+    background-color: rgb(21, 21, 56);
+}
+
+.btn{
+    margin: 10px;
+    background-color: rgb(71, 190, 71);
+    padding: 5px 28px;
+}
+.btn.ml-3{
+    background-color: rgb(75, 153, 241);
+    padding: 5px 28px;
+}
+
+.container.col-md-8.offset-md-2{
+    width: 100%;
+    height: 100%;
+}
+
+
 .section2{
-    height: 88vh;
-    width: 80%;
+    height: 100vh;
+    width: 100%;
 }
 
 .section2 img{
-    width: 100%;
+    width: 150%;
     height: 100%;
 }
 
@@ -129,6 +158,23 @@ textarea{
     width:fit-content;
 }
 
+
+.login-form.center-block{
+    border: 0ch;
+    width: 30%;
+    float: center;
+    margin-top: 6rem;
+    margin-left: 20rem;
+}
+
+.btn.btn-primary.btn-block{
+    width: 90%;
+
+}
+.login-form.center-block> h2{
+    font-weight:bold;
+    text-align: center;
+}
 
 /*********PROFILE PAGE********/
 
