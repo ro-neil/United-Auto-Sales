@@ -133,7 +133,7 @@ const Login = {
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
           <label for="username">Username</label><br>
-          <input type="text" name="username" class='form-control'/> 
+          <input type="text" name="username" class='form-control' id='usernameField'/> 
         </div>
         <div class="form-group">
           <label for="password">Password</label><br>
@@ -153,6 +153,7 @@ const Login = {
   methods: {
     login_user() {
       let loginForm = document.getElementById('loginForm');
+      let username = document.getElementById('usernameField').value;
       let form_data = new FormData(loginForm);
       let self = this;
       fetch("/api/auth/login", {
@@ -201,7 +202,7 @@ const Logout = {
   `,
   created(){
     if (!this.token){
-      this.$router.push({name: "not-found"})
+      this.$router.push('/login')
       return
     }
     let self = this;
@@ -323,17 +324,13 @@ const AddCar = {
   },
   created(){
     if (!this.token){
-      this.$router.push({name: "not-found"})
+      this.$router.push('/login')
       return
     }
     this.update_navbar();
   },
   methods: {
     add_car(){
-      if (!self.token){
-        self.$router.push({name: "not-found"})
-        return
-      }
       let form = document.getElementById('addCarForm');
       let form_data = new FormData(form);
       let self = this;
@@ -398,8 +395,8 @@ const Explore = {
       <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE? -->
       <a href="static/black_hilux.jpg">path1 </a>
       <a href="../static/black_hilux.jpg">path2</a>
-   
 
+      <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
       <div class="cars">
           <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
               <div class="col">
@@ -428,7 +425,7 @@ const Explore = {
   `,
   created(){
     if (!this.token){
-      this.$router.push({name: "not-found"})
+      this.$router.push('/login')
       return
     }
     this.update_navbar();
@@ -473,6 +470,11 @@ const Explore = {
           return response.json();
       })
       .then(function (jsonResponse) {
+          if(jsonResponse.length === 0){
+            document.getElementById('empty-search').classList.remove('d-none');
+          } else{
+            document.getElementById('empty-search').classList.add('d-none');
+          }
           self.car_data = jsonResponse;
           console.log(jsonResponse);
       })

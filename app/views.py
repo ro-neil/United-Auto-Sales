@@ -233,7 +233,6 @@ def addFavourite(car_id):
 
 @app.route("/api/search", methods=["GET"])
 @requires_auth
-@login_required
 def search():
     """ Search for cars based on their make or model """
 
@@ -241,16 +240,20 @@ def search():
     make = request.args.get('make')
     model = request.args.get('model')
     
+    cars = []
     if make and model:
         cars = Car.query.filter_by(make=make, model=model)
     elif make:
         cars = Car.query.filter_by(make=make)
     elif model:
         cars = Car.query.filter_by(model=model)
+    else:
+        return getCars()
 
     data = []
     for car in cars:
         data.append(obj_to_dict(car))
+    
     return jsonify(data)
 
 
