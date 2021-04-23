@@ -4,9 +4,16 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding-top: 1em;
+    padding-bottom: 3rem;
     font-family: Ubuntu, sans-serif;
     background-color: #f0f0f0;
 }
+
+:root {
+    --color-1: #2e294e;
+    --color-2: #E4b363;
+  }
+
 
 .section1{
     width: 100%;
@@ -21,28 +28,59 @@ body {
 h1{
     font-weight:bold;
 }
-.navbar.navbar-expand-lg.navbar-dark.bg-primary.fixed-top{
-    background-color: rgb(21, 21, 56);
+.navbar{
+    background-color: #048A81;
+    position: absolute;
 }
 
 .btn{
     margin: 10px;
-    background-color: rgb(71, 190, 71);
+    background-color: var(--color-1);
     padding: 5px 28px;
 }
+
 .btn.ml-3{
-    background-color: rgb(75, 153, 241);
+    background-color:var(--color-2);
     padding: 5px 28px;
 }
 
 .container.col-md-8.offset-md-2{
-    width: 100%;
-    height: 100%;
+    padding-top: 3rem;
+    
+}
+
+.font-weight-bold.text-center.registration-header{
+    margin-right:12rem;
+    text-align: left;   
+}
+
+#registrationForm{
+    width: 120%;
+    padding-top: 2rem;
+    border: solid white;
+    background-color: #fff;
+    padding-left:3rem ;
+    padding-right:3rem ;
+    padding-bottom: 3rem;
+    border-radius:15px;
+    box-shadow: 5px 10px 8px #f0f0f0;
+ 
+}
+
+#registration-page{
+    height: 140vh;
 }
 
 
+.btn.register{
+    margin-right: 30rem;
+    padding-left: 2rem;
+    margin-left:1px;
+    
+}
+
 .section2{
-    height: 100vh;
+    height: 120vh;
     width: 100%;
 }
 
@@ -50,6 +88,41 @@ h1{
     width: 150%;
     height: 100%;
 }
+
+#loginForm{
+    border: 1ch;
+    width: 50%;
+    float: center;
+    margin-top: 1rem;
+    margin-left: 16rem;
+    border: solid white;
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: 5px 10px 8px #f0f0f0;
+    border-radius:10px;
+}
+
+
+.btn.btn-primary.btn-block{
+    margin-right: 30rem;
+    padding-left: 2rem;
+    margin-left:1px;
+}
+
+.login-form-container.center-block> h2{
+    font-weight:bold;
+    text-align: center;
+    padding-left: 1rem; 
+    letter-spacing: -3px;
+    word-spacing: 3px;
+    white-space: nowrap;
+    margin-top: 5rem;
+    margin-left: 4rem;
+}
+
+
+
+
 
 label{
     font-weight: bold;
@@ -96,7 +169,7 @@ textarea{
 }
 #submit-button{
     margin-top: 30px;
-    background-color:#297373;
+    background-color:var(--color-1);
     color:#e6e6e6;
     font-weight: 500;
 }
@@ -159,22 +232,6 @@ textarea{
 }
 
 
-.login-form.center-block{
-    border: 0ch;
-    width: 30%;
-    float: center;
-    margin-top: 6rem;
-    margin-left: 20rem;
-}
-
-.btn.btn-primary.btn-block{
-    width: 90%;
-
-}
-.login-form.center-block> h2{
-    font-weight:bold;
-    text-align: center;
-}
 
 /*********PROFILE PAGE********/
 
