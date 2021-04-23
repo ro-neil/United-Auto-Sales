@@ -153,7 +153,6 @@ const Login = {
   methods: {
     login_user() {
       let loginForm = document.getElementById('loginForm');
-      let username = document.getElementById('usernameField').value;
       let form_data = new FormData(loginForm);
       let self = this;
       fetch("/api/auth/login", {
