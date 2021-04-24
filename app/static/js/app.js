@@ -13,6 +13,7 @@ const Home = {
               <button class="btn">Login</button>
               <button class="btn ml-3">Register</button>
           </div>
+          <heart><heart>
       </section>
       <section class="section2">
           <img src="../static/imgs/display_car.jpg" alt="A beautiful car">
@@ -780,7 +781,7 @@ app.component('heart', {
   template:
   `
   <div class="heart-container rounded-circle">
-        <img src="" alt="empty heart icon">
+        <img src="../static/imgs/favourite_empty.svg" alt="empty heart icon">
   </div>
   
   `,
