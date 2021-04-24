@@ -399,7 +399,27 @@ const Explore = {
 
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
       <div class="cars">
-        <car-gallery cars=car_data></car-gallery>
+        <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card h-100">
+              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+            
+              <div class="card-body">
+                <div class="d-flex">
+                  <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
+                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                  </div>
+                </div>
+                <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
+              </div>
+              <div class="card-footer text-center bg-info">
+                  View more details
+              </div>
+            </div>
+          </div>
+        </div>
       </div> 
     </div>
   `,
@@ -423,6 +443,7 @@ const Explore = {
     })
     .then(function (jsonResponse) {
         self.car_data = jsonResponse;
+        console.log(jsonResponse);
     })
     .catch(function (error) {
         console.log(error);
@@ -536,13 +557,13 @@ const ViewProfile = {
           <div class="col">
             <div class="card h-100">
 
-              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+              <img src="../static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
             
               <div class="card-body">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
                   <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
-                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                    <img src="../static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
                     <span id="price" class="pl-2">&#36{{car['price'] }}</span>
                   </div>
                 </div>
@@ -760,42 +781,6 @@ app.component('app-footer', {
         }
     }
 });
-
-app.component('car-gallery', {
-  name: 'car-gallery',
-  template: `
-    <div v-for="car in cars" class="row row-cols-1 row-cols-md-3 g-4">
-      <div class="col">
-        <div class="card h-100">
-
-          <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
-        
-          <div class="card-body">
-            <div class="d-flex">
-              <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-              <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
-                <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
-                <span id="price" class="pl-2">&#36{{car['price'] }}</span>
-              </div>
-            </div>
-            <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
-          </div>
-          <div class="card-footer text-center bg-info">
-              View more details
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
-  props: [
-    'cars'
-  ],
-  data() {
-      return {
-        
-      }
-  }
-})
 
 app.component('heart', {
   name: 'heart',
