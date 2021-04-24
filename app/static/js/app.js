@@ -21,7 +21,16 @@ const Home = {
     </div>
     `,
   data() {
-      return {}
+      return {
+        token: sessionStorage.getItem('united_auto_sales_token')
+      }
+  },
+  created() {
+    if (this.token){
+      console.log('Please logout to access the homepage.');
+      this.$router.push('/explore');
+      return
+    }
   }
 };
 
@@ -719,8 +728,8 @@ app.component('app-header', {
   name: 'AppHeader',
   template: `
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <span class="navbar-brand mb-0 site-name-container">
-        <img src='../static/imgs/car_icon.svg' id='car_icon' alt="A car icon"/> United Auto Sales
+      <span class="navbar-brand mb-0">
+        <img src='../static/imgs/car_icon.svg' id='car_icon' alt="A car icon"/> <span id="website-name">United Auto Sales</span>
       </span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
