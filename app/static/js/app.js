@@ -608,7 +608,6 @@ const ViewProfile = {
   }
 };
 
-
 const NotFound = {
   name: 'NotFound',
   template: `
@@ -637,6 +636,25 @@ const NotFound = {
   }
 };
 
+function addToFavourites(self,car_id) {
+  fetch(`/api/cars/${car_id}/favourite`, {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': csrf_token,
+        'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+    },
+    credentials: 'same-origin'
+  })
+  .then(function (response) {
+      return response.json();
+  })
+  .then(function (jsonResponse) {
+      self.message = jsonResponse['message'];
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+}
 
 /* CREATE APP */
 const app = Vue.createApp({
