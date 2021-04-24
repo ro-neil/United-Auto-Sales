@@ -96,6 +96,7 @@ def register():
         response = jsonify(form.errors)
         return response
 
+
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     """ Login a user """
@@ -110,6 +111,7 @@ def login():
 
         # db access
         user = User.query.filter_by(username=username).first()
+        
     
         # validate the password and ensure that a user was found
         if user is not None and check_password_hash(user.password, password):
@@ -120,7 +122,7 @@ def login():
                 "issue": currentDate()
             }
             encoded_jwt = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
-            response = jsonify({"message": "Login Successful", 'token':encoded_jwt})
+            response = jsonify({"message": "Login Successful", 'token':encoded_jwt, 'user_id':user.id})
             return response
         else:
             response = jsonify({'error':'Username or Password is incorrect.'})

@@ -2,13 +2,13 @@
 
 {% block main %}
 <div id="app">
-    {% block header %}<app-header></app-header>{% endblock %}
+    <app-header></app-header>
     <main>
         <div class="container">
             <!-- component matched by the route will render here -->
             <router-view></router-view>
         </div>
     </main>
-    {% block footer %}<app-footer></app-footer>{% endblock %}
+    <app-footer></app-footer>
 </div>
 {% endblock %}

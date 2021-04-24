@@ -105,6 +105,7 @@ const Register = {
           if (jsonResponse['id'] && jsonResponse['date_joined']){  // if successful
             self.$router.push('/login')
             self.user_data = jsonResponse
+            sessionStorage.setItem('united_auto_sales_user',JSON.stringify(jsonResponse))
           } else if (jsonResponse['error']){
             self.errors = jsonResponse
           }
@@ -169,12 +170,14 @@ const Login = {
       .then(function (jsonResponse) {
           if (jsonResponse['token']){
             if (typeof(Storage) !== "undefined") {
-              localStorage.setItem('united_auto_sales_token', jsonResponse['token']);
+              sessionStorage.setItem('united_auto_sales_token', jsonResponse['token']);
+              sessionStorage.setItem('united_auto_sales_user', jsonResponse['user_id']);
             } else {
               console.log('No Web Storage support..');
             }
-            self.message = jsonResponse['message'];        
+            self.message = jsonResponse['message'];       
             self.$router.push('/explore');
+            ViewProfile.data['user'] =
             self.update_navbar();
           } else {
             self.errors = jsonResponse['error'];
@@ -209,7 +212,7 @@ const Logout = {
       method: 'POST',
       headers: {
           'X-CSRFToken': csrf_token,
-          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
       },
       credentials: 'same-origin'
     })
@@ -219,7 +222,7 @@ const Logout = {
     .then(function (jsonResponse) {
         self.$router.push('/');
         self.update_navbar();
-        localStorage.removeItem('united_auto_sales_token');
+        sessionStorage.removeItem('united_auto_sales_token');
         self.message = jsonResponse['message'];
     })
     .catch(function (error) {
@@ -229,7 +232,7 @@ const Logout = {
   data() {
       return {
         message: '',
-        token: localStorage.getItem('united_auto_sales_token')
+        token: sessionStorage.getItem('united_auto_sales_token')
       }
   },
   methods: {
@@ -318,7 +321,7 @@ const AddCar = {
   `,
   data() {
       return {
-        token: localStorage.getItem('united_auto_sales_token')
+        token: sessionStorage.getItem('united_auto_sales_token')
       }
   },
   created(){
@@ -338,7 +341,7 @@ const AddCar = {
           body: form_data,
           headers: {
               'X-CSRFToken': csrf_token,
-              'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+              'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
           },
           credentials: 'same-origin'
       })
@@ -433,7 +436,7 @@ const Explore = {
       method: 'GET',
       headers: {
           'X-CSRFToken': csrf_token,
-          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
       },
       credentials: 'same-origin'
     })
@@ -461,7 +464,7 @@ const Explore = {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -488,7 +491,7 @@ const Explore = {
       make_searchTerm: '',
       model_searchTerm: '',
       uploads: '../../../uploads/cars/',
-      token: localStorage.getItem('united_auto_sales_token')
+      token: sessionStorage.getItem('united_auto_sales_token')
     }
   }
 };
@@ -520,15 +523,84 @@ const ViewCar = {
 const ViewProfile = {
   name: 'ViewProfile',
   template: `
-  <div>
-      <h1>View Profile</h1>
-  </div>
+    <div class="profile-page d-flex flex-column rounded">
+      <div class="profile-container mb-4 d-flex justify-content-start flex-row rounded border">
+          <div class="profile-left p-4">
+            <div class="img-container rounded-circle border d-flex justify-content-center align-items-center">
+              {# <img src="{{ url_for('static',filename='img/Roneil.jpg')}}"> #}
+              Profile Pic
+            </div>
+          </div>
+          <div class="profile-right p-4">
+          {{ user_id }}
+            <p>Name</p>
+            <p>@Username</p>
+            <p>Biography</p>
+            <div class="">
+                Contact and other info
+            </div>
+          </div>
+      </div>
+
+      <h2>Cars Favourited</h2>
+
+      <div class="cars">
+        <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card h-100">
+              <!-- {{ uploads }}{{ car['photo'] }} -->
+              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+            
+              <div class="card-body">
+                <div class="d-flex">
+                  <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
+                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                  </div>
+                </div>
+                <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
+              </div>
+              <div class="card-footer text-center bg-info">
+                  View more details
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   `,
   data() {
-      return {}
+      return {
+        token: sessionStorage.getItem('united_auto_sales_token'),
+        user_id: sessionStorage.getItem('united_auto_sales_user')
+      }
   },
   created(){
+    if (!this.token){
+      this.$router.push('/login')
+      return
+    }
     this.update_navbar();
+    let self = this;
+    console.log(self.user_data)
+    fetch("/api/users/"+self.user_data['id'], {
+      method: 'GET',
+      headers: {
+          'X-CSRFToken': csrf_token,
+          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+      },
+      credentials: 'same-origin'
+    })
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (jsonResponse) {
+        self.user_data = jsonResponse;
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
   },
   methods: {
     update_navbar(){
@@ -630,7 +702,7 @@ app.component('app-header', {
   data() {
     return {
       welcome: 'Hello World! Welcome to United Auto Sales',
-      token: localStorage.getItem('united_auto_sales_token'),
+      token: sessionStorage.getItem('united_auto_sales_token'),
     }
   }
 });
