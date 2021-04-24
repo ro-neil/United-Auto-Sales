@@ -181,6 +181,14 @@ textarea{
 .bold{
     font-weight: 800;
 }
+.heart-container{
+    height: 2rem;
+    width: 2rem;
+}
+.heart{
+    width: 60%;
+    height: 60%;
+}
 
 /******FLASH MESSAGE******/
 .flash{

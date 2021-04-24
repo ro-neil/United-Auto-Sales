@@ -13,7 +13,7 @@ const Home = {
               <button class="btn">Login</button>
               <button class="btn ml-3">Register</button>
           </div>
-          <heart><heart>
+          <heart></heart>
       </section>
       <section class="section2">
           <img src="../static/imgs/display_car.jpg" alt="A beautiful car">
@@ -780,13 +780,22 @@ app.component('heart', {
   name: 'heart',
   template:
   `
-  <div class="heart-container rounded-circle">
-        <img src="../static/imgs/favourite_empty.svg" alt="empty heart icon">
+  <div @click="change" class="heart-container border rounded-circle d-flex justify-content-center align-items-center">
+        <img src="../static/imgs/favourite_empty.svg" alt="empty heart icon" id="heart-empty" class="heart">
+        <img src="../static/imgs/favourite_filled.svg" alt="empty heart icon" id="heart-filled" class="heart d-none">
   </div>
   
   `,
-  data(){
-    return {}
+  methods: {
+    change(){
+      let hearts = document.getElementsByClassName('heart');
+      for(let heart of hearts){
+        if(heart.classList.contains('d-none'))
+          heart.classList.remove('d-none');
+        else
+          heart.classList.add('d-none');
+      }
+    }
   }
 })
 
