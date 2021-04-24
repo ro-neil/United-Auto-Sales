@@ -636,6 +636,7 @@ const NotFound = {
   }
 };
 
+
 function addToFavourites(self,car_id) {
   fetch(`/api/cars/${car_id}/favourite`, {
     method: 'POST',
@@ -771,6 +772,20 @@ app.component('car-gallery', {
       return {
         
       }
+  }
+})
+
+app.component('heart', {
+  name: 'heart',
+  template:
+  `
+  <div class="heart-container rounded-circle">
+        <img src="" alt="empty heart icon">
+  </div>
+  
+  `,
+  data(){
+    return {}
   }
 })
 
