@@ -532,7 +532,28 @@ const ViewProfile = {
       <h2 class='bold'>Cars Favourited</h2>
 
       <div class="cars">
-        <car-gallery v-if="car_data.length !== 0" cars=car_data></car-gallery>
+        <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card h-100">
+
+              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+            
+              <div class="card-body">
+                <div class="d-flex">
+                  <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
+                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                  </div>
+                </div>
+                <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
+              </div>
+              <div class="card-footer text-center bg-info">
+                  View more details
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `,
