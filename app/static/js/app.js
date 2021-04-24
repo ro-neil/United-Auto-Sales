@@ -126,19 +126,17 @@ const Login = {
       <div v-if=message class="flash">
         {{ message }}
       </div>
-      <ul v-if=errors class="text-white px-0">
-        <li v-for="(key,value) in errors" class="bg-danger flash">
-            {{ value }}
-        </li> 
-      </ul>
+      <div v-if=errors class="text-white bg-danger flash">
+        {{ errors }}
+      </div>
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
           <label for="username">Username</label><br>
-          <input type="text" name="username" class='form-control' id='usernameField'/> 
+          <input type="text" name="username" class='form-control' id='usernameField' required/> 
         </div>
         <div class="form-group">
           <label for="password">Password</label><br>
-          <input type="password" name="password" class='form-control'/> 
+          <input type="password" name="password" class='form-control' required/> 
         </div>
         <button type="submit" name="submit-btn" class="btn btn-primary btn-block">Login</button>
       </form>
@@ -147,7 +145,7 @@ const Login = {
   data(){
     return {
       message: "",
-      errors: [],
+      errors: "",
       state: false
     }
   },
@@ -178,7 +176,7 @@ const Login = {
             self.message = jsonResponse['message'];       
             self.$router.push('/explore');
             ViewProfile.data['user'] =
-            self.update_navbar();
+            self.updateNavbar();
           } else {
             self.errors = jsonResponse['error'];
           }
@@ -188,7 +186,7 @@ const Login = {
           console.log(error);
       });
     },
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -221,7 +219,7 @@ const Logout = {
     })
     .then(function (jsonResponse) {
         self.$router.push('/');
-        self.update_navbar();
+        self.updateNavbar();
         sessionStorage.removeItem('united_auto_sales_token');
         self.message = jsonResponse['message'];
     })
@@ -236,7 +234,7 @@ const Logout = {
       }
   },
   methods: {
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.remove('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -329,7 +327,7 @@ const AddCar = {
       this.$router.push('/login')
       return
     }
-    this.update_navbar();
+    this.updateNavbar();
   },
   methods: {
     add_car(){
@@ -360,7 +358,7 @@ const AddCar = {
           console.log(error);
       });
     },
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -400,29 +398,8 @@ const Explore = {
 
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
       <div class="cars">
-          <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
-              <div class="col">
-                  <div class="card h-100">
-                      <!-- {{ uploads }}{{ car['photo'] }} -->
-                      <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
-                   
-                      <div class="card-body">
-                        <div class="d-flex">
-                          <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-                          <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
-                            <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
-                            <span id="price" class="pl-2">&#36{{car['price'] }}</span>
-                          </div>
-                        </div>
-                        <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
-                      </div>
-                      <div class="card-footer text-center bg-info">
-                          View more details
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+        <car-gallery cars=car_data></car-gallery>
+      </div> 
     </div>
   `,
   created(){
@@ -430,7 +407,7 @@ const Explore = {
       this.$router.push('/login')
       return
     }
-    this.update_navbar();
+    this.updateNavbar();
     let self = this;
     fetch("/api/cars", {
       method: 'GET',
@@ -451,7 +428,7 @@ const Explore = {
     });
   },
   methods: {
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -507,10 +484,10 @@ const ViewCar = {
       return {}
   },
   created(){
-    this.update_navbar();
+    this.updateNavbar();
   },
   methods: {
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -523,57 +500,47 @@ const ViewCar = {
 const ViewProfile = {
   name: 'ViewProfile',
   template: `
-    <div class="profile-page d-flex flex-column rounded">
-      <div class="profile-container mb-4 d-flex justify-content-start flex-row rounded border">
-          <div class="profile-left p-4">
-            <div class="img-container rounded-circle border d-flex justify-content-center align-items-center">
-              {# <img src="{{ url_for('static',filename='img/Roneil.jpg')}}"> #}
-              Profile Pic
+    <div class="profile-page d-flex flex-column">
+      <div class="profile-container mb-4 d-flex justify-content-start flex-row">
+          <div class="profile-left px-3 pt-3 d-flex justify-content-center">
+            <div class="img-container border rounded-circle">
+              <img src="../static/imgs/black_hilux.jpg" alt="Profile Picture" class="rounded-circle w-100 h-100">
             </div>
           </div>
-          <div class="profile-right p-4">
-          {{ user_id }}
-            <p>Name</p>
-            <p>@Username</p>
-            <p>Biography</p>
-            <div class="">
-                Contact and other info
+          <div class="profile-right">
+            <h1 class="m-0 bold purple">{{ user_data['name'] }}</h1>
+            <h2 class="purple bold">@{{ user_data['username'] }}</h2>
+            <p class="py-2 text-muted bio">{{ user_data['biography'] }}
+
+            Please create all new routes and view functions above this route.
+            This route is now our catch all route for our VueJS single page application.
+
+            </p>
+
+            <div class="user-info mb-3">
+                <span class="purple">Email</span>
+                <span>{{ user_data['email'] }}</span>
+                <span class="purple">Location</span>
+                <span>{{ user_data['location'] }}</span>
+                <span class="purple">Joined</span>
+                <span>{{ formatDate(user_data['date_joined']) }}</span>
             </div>
           </div>
       </div>
 
-      <h2>Cars Favourited</h2>
+      <h2 class='bold'>Cars Favourited</h2>
 
       <div class="cars">
-        <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
-          <div class="col">
-            <div class="card h-100">
-              <!-- {{ uploads }}{{ car['photo'] }} -->
-              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
-            
-              <div class="card-body">
-                <div class="d-flex">
-                  <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
-                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
-                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
-                  </div>
-                </div>
-                <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
-              </div>
-              <div class="card-footer text-center bg-info">
-                  View more details
-              </div>
-            </div>
-          </div>
-        </div>
+        <car-gallery v-if="car_data.length !== 0" cars=car_data></car-gallery>
       </div>
     </div>
   `,
   data() {
       return {
         token: sessionStorage.getItem('united_auto_sales_token'),
-        user_id: sessionStorage.getItem('united_auto_sales_user')
+        user_id: sessionStorage.getItem('united_auto_sales_user'),
+        user_data: [],
+        car_data: []
       }
   },
   created(){
@@ -581,37 +548,66 @@ const ViewProfile = {
       this.$router.push('/login')
       return
     }
-    this.update_navbar();
     let self = this;
-    console.log(self.user_data)
-    fetch("/api/users/"+self.user_data['id'], {
-      method: 'GET',
-      headers: {
-          'X-CSRFToken': csrf_token,
-          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
-      },
-      credentials: 'same-origin'
-    })
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (jsonResponse) {
-        self.user_data = jsonResponse;
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+    self.updateNavbar();
+    self.fetchUser(self);
+    self.fetchFavourites(self);
   },
   methods: {
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
       }
+    },
+    formatDate(date_joined){
+      let date = (new Date(date_joined)).toDateString().split(" ");
+      return `${date[1]} ${date[2]}, ${date[3]}`;
+    },
+    fetchUser(self){
+      fetch(`/api/users/${self.user_id}`, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          self.user_data = jsonResponse;
+          console.log(jsonResponse)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    },
+    fetchFavourites(self){
+      fetch(`/api/users/${self.user_id}/favourites`, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          self.car_data = jsonResponse;
+          console.log(jsonResponse)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
   }
 };
+
 
 const NotFound = {
   name: 'NotFound',
@@ -627,11 +623,11 @@ const NotFound = {
   },
   created(){
     if (this.token){
-      this.update_navbar();
+      this.updateNavbar();
     }
   },
   methods: {
-    update_navbar(){
+    updateNavbar(){
       document.getElementById('logged-out').classList.add('d-none');
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
@@ -724,6 +720,41 @@ app.component('app-footer', {
     }
 });
 
+app.component('car-gallery', {
+  name: 'car-gallery',
+  template: `
+    <div v-for="car in cars" class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <div class="card h-100">
+
+          <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+        
+          <div class="card-body">
+            <div class="d-flex">
+              <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
+              <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+              </div>
+            </div>
+            <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
+          </div>
+          <div class="card-footer text-center bg-info">
+              View more details
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  props: [
+    'cars'
+  ],
+  data() {
+      return {
+        
+      }
+  }
+})
 
 // Define Routes
 const routes = [
