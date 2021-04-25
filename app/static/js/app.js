@@ -385,8 +385,8 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5">
-      <h2>Explore</h2>
-      <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
+      <h1 class="pb-2">Explore</h1>
+      <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
         <div class="make-component mr-2">
             <label class="make-label" for="make">Make</label>
@@ -409,14 +409,14 @@ const Explore = {
               <div class="card-body">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                  <div id="price-tag" class="badge badge-info px-2 pt-2 text-light md-bold ml-1">
                     <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
                     <span id="price" class="pl-2">&#36{{ car['price'] }}</span>
                   </div>
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              <div class="card-footer text-center bg-info">
+              <div class="card-footer btn submit-button text-center">
                   View more details
               </div>
             </div>
