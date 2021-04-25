@@ -18,6 +18,11 @@ import os
 import jwt
 from sqlalchemy import and_
 from functools import wraps
+from flask.helpers import send_from_directory
+
+
+CAR_DIR = "/uploads/cars/"
+USER_DIR = "/uploads/users/"
 
 
 # Create a JWT @requires_auth decorator
@@ -158,7 +163,9 @@ def getCars():
     carsData = []
     for car in cars:
         # convert sqlalchemy car object to a dictionary object
-        carsData.append(obj_to_dict(car))
+        carObj = obj_to_dict(car)
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        carsData.append(carObj)
     response = jsonify(carsData)
     return response
 
@@ -232,6 +239,7 @@ def getCar(car_id):
     car = Car.query.get(car_id)
     if car is None:
         return jsonify(message="Car not found")
+    car['photo'] = f"{CAR_DIR}{car['photo']}"
     return jsonify(obj_to_dict(car))
 
 
@@ -272,7 +280,9 @@ def search():
 
     data = []
     for car in cars:
-        data.append(obj_to_dict(car))
+        carObj = obj_to_dict(car)
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        data.append(carObj)
     
     return jsonify(data)
 
@@ -288,6 +298,7 @@ def getUser(user_id):
     
     user = obj_to_dict(user)
     user['date_joined'] = user['date_joined'].strftime("%Y-%m-%d, %H:%M:%S") # reformat date
+    user['photo'] = f"{USER_DIR}{user['photo']}"
     user.pop('password')
     return jsonify(user)
 
@@ -304,7 +315,11 @@ def getFavourites(user_id):
     for favourite in favourites:
         car_id = obj_to_dict(favourite)['car_id']
         car = Car.query.get(car_id)
-        data.append(obj_to_dict(car))
+
+        carObj = obj_to_dict(car)
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+
+        data.append(carObj)
     return jsonify(data)
 
 
@@ -338,6 +353,18 @@ def flash_errors(form):
         for error in errors:
             msg = f"Error in the {getattr(form, field).label.text} field - {error}"
             flash(msg, 'danger')
+            
+
+@app.route('/uploads/cars/<filename>')
+def get_car_image(filename):
+    root_dir = os.getcwd()
+    return send_from_directory(os.path.join(root_dir, app.config['CARS_FOLDER']),filename)
+
+
+@app.route('/uploads/users/<filename>')
+def get_user_image(filename):
+    root_dir = os.getcwd()
+    return send_from_directory(os.path.join(root_dir, app.config['USERS_FOLDER']),filename)
 
 
 ###
@@ -354,6 +381,7 @@ def obj_to_dict(obj):
         if k != '_sa_instance_state':
             data[k] = v
     return data
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

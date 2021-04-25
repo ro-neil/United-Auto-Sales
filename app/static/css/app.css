@@ -1,21 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&family=Poppins&display=swap');
+
+
+:root {
+    --color-1: #2e294e;
+    --color-2: #E4b363;
+    --color-3: #048a81;
+    --body-background: #f0f0f0;
+}
 
 body {
     box-sizing: border-box;
     margin: 0;
-    padding-top: 5rem;
     font-family: 'Nunito', 'Poppins', sans-serif;
-    background-color: #f0f0f0;
+    background-color: var(--body-background);
 }
 
+#website-name{
+    font-weight:700;
+    margin-left: 0.5rem;
+    font-size: 16px;
+}
 .section1{
     width: 100%;
     text-align: left;
     text-decoration: solid;
     padding-top: 10rem;
-    margin-left: 80px;
     margin-right: 80px;
+}
+
+.site-info p{
+    color:#505050;
 }
 
 :root {
@@ -24,15 +38,127 @@ body {
   }
 
 .section2{
-    height: 88vh;
-    width: 80%;
+    height: 100vh;
+    width: 100%;
 }
 
 .section2 img{
     width: 100%;
     height: 100%;
 }
+    
+h1{
+    font-weight: 800;
+    color: #000;
+}
+.navbar{
+    background-color: var(--color-3);
+    padding: 0.3rem 1rem;
+}
 
+#navbarSupportedContent{
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.btn{
+    background-color: var(--color-2);
+    padding: 5px 28px;
+    color: white;
+    font-weight: 700;
+}
+
+.user-auth .register-btn{
+    color: black;
+    margin-right: 5rem;
+}
+
+.user-auth .login-btn{
+    
+    background-color: black;
+}
+
+.user-auth .register-btn:hover{
+    background-color: var(--color-3);
+    color: white;
+}
+
+.user-auth .login-btn:hover{
+    background-color: var(--color-3);
+    color: white;
+}
+
+
+.container.col-md-8.offset-md-2{
+    padding-top: 3rem;
+}
+
+.font-weight-bold.text-center.registration-header{
+    margin-right:12rem;
+    text-align: left;   
+}
+
+#registrationForm{
+    padding-top: 2rem;
+    border: solid white;
+    background-color: #fff;
+    padding-left:3rem ;
+    padding-right:3rem ;
+    padding-bottom: 3rem;
+    border-radius:15px;
+    box-shadow: 5px 10px 8px #f0f0f0;
+ 
+}
+
+.btn.register{
+    margin-right: 30rem;
+    padding-left: 2rem;
+    margin-left:1px;
+}
+
+.container.col-md-8.offset-md-2{
+    padding-top: 3rem;
+}
+
+.font-weight-bold.text-center.addCar-header{
+    text-align: left;   
+}
+
+#addCarForm{
+    padding-top: 2rem;
+    border: solid white;
+    background-color: #fff;
+    padding-left:3rem ;
+    padding-right:3rem ;
+    padding-bottom: 3rem;
+    border-radius:15px;
+    box-shadow: 5px 10px 8px #f0f0f0;
+}
+
+#addCar-page{
+    height: 140vh;
+}
+
+#loginForm{
+    border: 1ch;
+    width: 50%; 
+    border: solid white;
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: 5px 10px 8px #f0f0f0;
+    border-radius:10px;
+}
+
+.login-form-container.center-block> h2{
+    font-weight:bold;
+    letter-spacing: -3px;
+    word-spacing: 3px;
+    white-space: nowrap;
+    margin-bottom: 1rem;
+}
+.login-form-container{
+    margin-top: 8rem;
+}
 label{
     font-weight: bold;
 }
@@ -76,15 +202,15 @@ textarea{
 .form-group textarea, .form-group select{
     border:1px solid rgba(57, 57, 58, 0.1);
 }
-#submit-button{
-    margin-top: 30px;
-    background-color:#297373;
-    color:#e6e6e6;
-    font-weight: 500;
+.submit-button{
+    margin-top: 0.8rem;
+    background-color: var(--color-2);
+    color:#000;
 }
 
-#submit-button:hover{
-    background-color:#39393a;
+.submit-button:hover{
+    background-color: var(--color-1);
+    color: white;
 }
 
 #registration-form{
@@ -95,13 +221,27 @@ textarea{
 }
 
 .form-row .sm-padding-right{
-    padding-right: 2rem;
+    border-right: 2rem solid white;
 }
 
+.search-btn{
+    background-color: var(--color-1);
+    color: white;
+}
+
+.search-btn:hover{
+    background-color: var(--color-3);
+    color: white;
+}
 .cars{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+}
+
+#price-tag{
+    background-color: var(--color-2);
+    color: var(--color-1) !important;
 }
 
 .card img{
@@ -114,6 +254,7 @@ textarea{
     height: 1.5rem;
     padding-bottom: .125rem;
 }
+
 
 .view-car{
     display: flex;
@@ -140,10 +281,24 @@ textarea{
     width:fit-content;
 }
 
+.explore{
+    margin-top: 5rem;
+}
+
+.card-footer.btn{
+    background-color: var(--color-1);
+    color: white;
+}
+
+.card-footer.btn:hover{
+    background-color: var(--color-3);
+    color: white;
+}
 
 /*********PROFILE PAGE********/
 
 .profile-page{
+    margin-top: 5rem;
     padding: 1rem 6rem 1rem 6rem; 
 }
 .profile-container{
@@ -162,15 +317,16 @@ textarea{
     padding: 1rem 12.5rem 5rem 1rem;
 }
 
+.profile-right h1{
+    color: var(--color-1);
+}
 .profile-right h2{
     font-size: 18px;
 }
 
-.purple{
-    color: #2E294E;
-}
 .bio{
     font-weight: 600;
+    color: #303030 !;
 }
 .user-info{
     display: grid;

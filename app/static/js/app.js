@@ -5,15 +5,18 @@ const Home = {
   template: `
     <div id="home-page-container" class="d-flex">
       <section class="section1">
-          <div class="site-info">
-              <h1>Buy and sell cars online</h1>
-              <p>United auto sales provides the fastest, </p>
+          <div class="site-info w-75">
+              <h1>Buy and Sell <br> Cars Online</h1>
+              <p class="py-2">United Auto Sales provides the fastest, easiest and most user friendly way to buy or sell cars online. Find a Great Price on the Vehicle You Want. </p>
           </div>
-          <div class="user-auth d-flex">
-              <button class="btn">Login</button>
-              <button class="btn ml-3">Register</button>
+          <div class="user-auth d-flex ml-0 w-75 pr-5">
+            <router-link to="/register" class="w-50">
+              <button class="btn register-btn w-100">Register</button>
+            </router-link>
+            <router-link to="/login" class="w-50 ml-2">
+              <button class="btn login-btn w-100">Login</button>
+            </router-link> 
           </div>
-          <heart></heart>
       </section>
       <section class="section2">
           <img src="../static/imgs/display_car.jpg" alt="A beautiful car">
@@ -38,55 +41,55 @@ const Register = {
   name: 'Register',
   template: `
       <div class="container col-md-8 offset-md-2" id="registration-page">
-      <h1 class="font-weight-bold text-center registration-header">Register New User</h1>
-      <ul v-if=errors class="pl-0">
-        <li v-for="(key,value) in errors" class="flash bg-danger">
-          {{ key }}
-        </li>
-      </ul>
-      <form method="post" @submit.prevent="register_user" id="registrationForm">
-          <div class="form-row">  
+        <h1 class="font-weight-bold registration-header mt-4">Register New User</h1>
+        <ul v-if=errors class="pl-0">
+          <li v-for="(key,value) in errors" class="flash bg-danger">
+            {{ key }}
+          </li>
+        </ul>
+        <form method="post" @submit.prevent="register_user" id="registrationForm" class="w-100">
+            <div class="form-row">  
+                <div class="form-group col-md-6 sm-padding-right">
+                    <label for="username">Username</label><br>
+                    <input type="text" name="username" class='form-control' required/> 
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="password">Password</label><br>
+                    <input type="password" name="password" class='form-control' required/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 sm-padding-right">
+                    <label for="fullname">Fullname</label><br>
+                    <input type="text" name="fullname" class='form-control' required/> 
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label><br>
+                    <input type="email" name="email" class='form-control' required/>
+                </div>
+            </div>
+            <div class="form-row">
               <div class="form-group col-md-6 sm-padding-right">
-                  <label for="username">Username</label><br>
-                  <input type="text" name="username" class='form-control' required/> 
+                <label for="location">Location</label><br>
+                <input type="text" name="location" class='form-control' required/>
               </div>
               <div class="form-group col-md-6">
-                  <label for="password">Password</label><br>
-                  <input type="password" name="password" class='form-control' required/>
+                
               </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-6 sm-padding-right">
-                  <label for="fullname">Fullname</label><br>
-                  <input type="text" name="fullname" class='form-control' required/> 
-              </div>
-              <div class="form-group col-md-6">
-                  <label for="email">Email</label><br>
-                  <input type="email" name="email" class='form-control' required/>
-              </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6 sm-padding-right">
-              <label for="location">Location</label><br>
-              <input type="text" name="location" class='form-control' required/>
             </div>
-            <div class="form-group col-md-6">
-              
+            <div class="form-group">
+                <label for="biography">Biography</label><br>
+                <textarea cols="50" rows="2" name="biography" class="form-control" required></textarea>
             </div>
-          </div>
-          <div class="form-group">
-              <label for="biography">Biography</label><br>
-              <textarea cols="50" rows="2" name="biography" class="form-control" required></textarea>
-          </div>
-          <div class="form-group">
-              <label for="photo"><b>Upload Photo</b></label><br>
-              <input type="file" name="photo" required/> 
-          </div>
-          <div class="text-center">
-              <button type="submit" id="submit-button" class="btn bg-info">Register</button>
-          </div>
-      </form>
-    </div>
+            <div class="form-group">
+                <label for="photo"><b>Upload Photo</b></label><br>
+                <input type="file" name="photo" required/> 
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn submit-button register">Register</button>
+            </div>
+        </form>
+      </div>
   `,
   data(){
     return {
@@ -131,8 +134,11 @@ const Register = {
 const Login = {
   name: 'Login',
   template: `
-    <div class="login-form-container center-block">
-      <h2>Please Log in</h2>
+    <div class="container col-md-8 offset-md-2 login-form-container center-block d-flex flex-column justify-content-center align-items-center">
+      <h2 class="">Login to your account </h2>
+      <div v-if=message class="flash">
+        {{ message }}
+      </div>
       <div v-if=errors class="text-white bg-danger flash">
         {{ errors }}
       </div>
@@ -145,7 +151,7 @@ const Login = {
           <label for="password">Password</label><br>
           <input type="password" name="password" class='form-control' required/> 
         </div>
-        <button type="submit" name="submit-btn" class="btn btn-primary btn-block">Login</button>
+        <button type="submit" name="submit-btn" class="btn submit-button w-100 py-1">Login</button>
       </form>
     </div>
   `,
@@ -256,7 +262,7 @@ const AddCar = {
   name: 'AddCar',
   template: `
     <div v-if=token class="container col-md-8 offset-md-2" id="addCar-page">
-      <h1 class="font-weight-bold text-center addCar-header">Add New Car</h1>
+      <h1 class="font-weight-bold addCar-header mt-4">Add New Car</h1>
       <form method="post" @submit.prevent="add_car" id="addCarForm">
           <div class="form-row">  
               <div class="form-group col-md-6 sm-padding-right">
@@ -285,7 +291,7 @@ const AddCar = {
             </div>
             <div class="form-group col-md-6">
               <label for="carType">Car Type</label><br>
-              <select name="carType" id="carType" form="addCarForm" class="w-100">
+              <select name="carType" id="carType" form="addCarForm" class="w-100 form-control">
                 <option value="SUV">SUV</option>
                 <option value="Sedan">Sedan</option>
                 <option value="Coupe">Coupe</option>
@@ -302,7 +308,7 @@ const AddCar = {
           <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
               <label for="transmission">Transmission</label><br>
-              <select name="transmission" id="transmissionType" form="addCarForm" class="w-100">
+              <select name="transmission" id="transmissionType" form="addCarForm" class="w-100 form-control">
                 <option value="Automatic">Automatic</option>
                 <option value="Manual">Manual</option>
               </select>
@@ -319,8 +325,8 @@ const AddCar = {
               <label for="photo"><b>Upload Photo</b></label><br>
               <input type="file" name="photo" required/> 
           </div>
-          <div class="text-center">
-              <button type="submit" id="submit-button" class="btn bg-info">Save</button>
+          <div class="">
+              <button type="submit" class="btn submit-button">Save</button>
           </div>
       </form>
     </div>
@@ -380,11 +386,11 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5">
-    <div v-if=message  v-show="elementVisible" class="flash hideElement">
+      <div v-if=message v-show="elementVisible" class="flash hideElement">
         {{ message }}
       </div>
-      <h2>Explore</h2>
-      <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around">
+      <h1 class="pb-2">Explore</h1>
+      <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
         <div class="make-component mr-2">
             <label class="make-label" for="make">Make</label>
@@ -394,40 +400,30 @@ const Explore = {
             <label class="model-label" for="model">Model</label>
             <input type="search" name="model" v-model="model_searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
         </div>
-        <button type="submit" class="btn search-btn align-self-end mb-2 px-5 bg-success text-white">Search</button> 
-      <!--
-        <div class="form-group d-flex search-bar-container" name="search-bar-container">
-          
-        </div>
-        -->
+        <button type="submit" class="btn search-btn align-self-end mb-2 px-5 text-white">Search</button> 
       </form>
 
-
-      <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE? -->
-      <a href="static/black_hilux.jpg">path1 </a>
-      <a href="../static/black_hilux.jpg">path2</a>
-
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
+      
       <div class="cars">
         <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
           <div class="col">
             <div class="card h-100">
-              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
-            
+              <img :src="car['photo']" class="card-img-top" alt="car photo">  
               <div class="card-body">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                  <div id="price-tag" class="badge px-2 pt-2 text-light md-bold ml-1">
                     <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
-                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                    <span id="price" class="pl-2">&#36{{ car['price'] }}</span>
                   </div>
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              <span id="car_id" class="d-none" >{{car['id']}} </span>
+              
+              <!-- <span id="car_id" class="d-none" >{{car['id']}} </span> -->
 
-
-              <div class="card-footer text-center bg-info btn" v-bind:id="car['id']" @click="getID($event)">
+              <div class="card-footer btn submit-button text-center v-bind:id="car['id']" @click="getID($event)">
                   View more details
               </div>
               
@@ -527,7 +523,6 @@ const Explore = {
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
-      uploads: '../../../uploads/cars/',
       token: sessionStorage.getItem('united_auto_sales_token')
     }
   }
@@ -613,11 +608,11 @@ const ViewProfile = {
       <div class="profile-container mb-4 d-flex justify-content-start flex-row">
           <div class="profile-left px-3 pt-3 d-flex justify-content-center">
             <div class="img-container border rounded-circle">
-              <img src="../static/imgs/black_hilux.jpg" alt="Profile Picture" class="rounded-circle w-100 h-100">
+              <img :src="user_data['photo']" alt="Profile Picture" class="rounded-circle w-100 h-100">
             </div>
           </div>
           <div class="profile-right">
-            <h1 class="m-0 bold purple">{{ user_data['name'] }}</h1>
+            <h1 class="m-0 bold">{{ user_data['name'] }}</h1>
             <h2 class="purple bold">@{{ user_data['username'] }}</h2>
             <p class="py-2 text-muted bio">{{ user_data['biography'] }}
 
@@ -644,19 +639,19 @@ const ViewProfile = {
           <div class="col">
             <div class="card h-100">
 
-              <img src="../static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+              <img :src="car['photo']" class="card-img-top" alt="car photo">
             
               <div class="card-body">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
-                  <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
+                  <div id="price-tag" class="badge px-2 pt-2 text-light md-bold ml-1">
                     <img src="../static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
                     <span id="price" class="pl-2">&#36{{car['price'] }}</span>
                   </div>
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              <div class="card-footer text-center bg-info">
+              <div class="card-footer btn submit-button text-center">
                   View more details
               </div>
             </div>
@@ -805,9 +800,10 @@ const app = Vue.createApp({
 app.component('app-header', {
   name: 'AppHeader',
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <span class="navbar-brand mb-0">
-        <img src='../static/imgs/car_icon.svg' id='car_icon' alt="A car icon"/> <span id="website-name">United Auto Sales</span>
+        <img src='../static/imgs/car_icon.svg' id='car_icon' class="pb-1" alt="A car icon"/>
+        <span id="website-name">United Auto Sales</span>
       </span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -857,7 +853,7 @@ app.component('app-footer', {
     template: 
     `
     <footer>
-        <div class="container m-4">
+        <div class="container">
         <!-- Footer content goes here -->
         </div>
     </footer>
