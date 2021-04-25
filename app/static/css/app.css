@@ -284,6 +284,7 @@ textarea{
 /*********PROFILE PAGE********/
 
 .profile-page{
+    margin-top: 5rem;
     padding: 1rem 6rem 1rem 6rem; 
 }
 .profile-container{
