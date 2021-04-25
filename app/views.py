@@ -21,6 +21,10 @@ from functools import wraps
 from flask.helpers import send_from_directory
 
 
+CAR_DIR = "/uploads/cars/"
+USER_DIR = "/uploads/users/"
+
+
 # Create a JWT @requires_auth decorator
 # This decorator can be used to denote that a specific route should check
 # for a valid JWT token before displaying the contents of that route.
@@ -160,7 +164,7 @@ def getCars():
     for car in cars:
         # convert sqlalchemy car object to a dictionary object
         carObj = obj_to_dict(car)
-        carObj['photo'] = f"/uploads/cars/{carObj['photo']}"
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
         carsData.append(carObj)
     response = jsonify(carsData)
     return response
@@ -217,7 +221,7 @@ def getCar(car_id):
     car = Car.query.get(car_id)
     if car is None:
         return jsonify(message="Car not found")
-    car['photo'] = f"/uploads/cars/{car['photo']}"
+    car['photo'] = f"{CAR_DIR}{car['photo']}"
     return jsonify(obj_to_dict(car))
 
 
@@ -258,7 +262,9 @@ def search():
 
     data = []
     for car in cars:
-        data.append(obj_to_dict(car))
+        carObj = obj_to_dict(car)
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        data.append(carObj)
     
     return jsonify(data)
 
@@ -274,7 +280,7 @@ def getUser(user_id):
     
     user = obj_to_dict(user)
     user['date_joined'] = user['date_joined'].strftime("%Y-%m-%d, %H:%M:%S") # reformat date
-    user['photo'] = f"/uploads/users/{user['photo']}"
+    user['photo'] = f"{USER_DIR}{user['photo']}"
     user.pop('password')
     return jsonify(user)
 
@@ -291,7 +297,11 @@ def getFavourites(user_id):
     for favourite in favourites:
         car_id = obj_to_dict(favourite)['car_id']
         car = Car.query.get(car_id)
-        data.append(obj_to_dict(car))
+
+        carObj = obj_to_dict(car)
+        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+
+        data.append(carObj)
     return jsonify(data)
 
 

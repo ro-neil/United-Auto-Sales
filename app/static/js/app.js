@@ -408,7 +408,7 @@ const Explore = {
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
                   <div id="price-tag" class="badge badge-success px-2 pt-2 text-light md-bold ml-1">
                     <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
-                    <span id="price" class="pl-2">&#36{{car['price'] }}</span>
+                    <span id="price" class="pl-2">&#36{{ car['price'] }}</span>
                   </div>
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
