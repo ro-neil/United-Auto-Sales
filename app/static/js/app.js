@@ -133,9 +133,6 @@ const Login = {
   template: `
     <div class="login-form-container center-block">
       <h2>Please Log in</h2>
-      <div v-if=message class="flash">
-        {{ message }}
-      </div>
       <div v-if=errors class="text-white bg-danger flash">
         {{ errors }}
       </div>
@@ -183,8 +180,9 @@ const Login = {
             } else {
               console.log('No Web Storage support..');
             }
-            self.message = jsonResponse['message'];       
-            self.$router.push('/explore');
+            self.message = jsonResponse['message']; 
+            let m = jsonResponse['message']; 
+            self.$router.push(`/explore/${m}`);
             ViewProfile.data['user'] =
             self.updateNavbar();
           } else {
@@ -382,6 +380,9 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5">
+    <div v-if=message  v-show="elementVisible" class="flash hideElement">
+        {{ message }}
+      </div>
       <h2>Explore</h2>
       <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -456,11 +457,28 @@ const Explore = {
     })
     .then(function (jsonResponse) {
         self.car_data = jsonResponse;
-        console.log(jsonResponse);
+        console.log(jsonResponse['message']);
     })
     .catch(function (error) {
         console.log(error);
     });
+      fetch("/api/cars/"+this.$route.params.message, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+        return response.json();
+        })
+      .then(function (response) {
+        self.message = response['message'];
+        self.car =  response;
+        console.log(self.message);
+      })
+    setTimeout(() => this.elementVisible = false, 3000);
   },
   methods: {
     updateNavbar(){
@@ -504,6 +522,8 @@ const Explore = {
   },
   data() {
     return {
+      elementVisible: true,
+      message:'',
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
@@ -521,6 +541,7 @@ const ViewCar = {
       <div class="car">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
+        <section>
             <div class="card h-100 view-car">
                 {# <img src="{{ url_for('getImage', filename=_car.photo_name) }}" id='view-car-img' alt="{{ _car.photo_name }}"> #}
                 <div class="card-body vp-body">
@@ -535,7 +556,7 @@ const ViewCar = {
                       <p class="card-text"><i class="fas fa-bed">
                       </i> Price $ {{car['price']}}    <i class="fas fa-shower"></i> Transmission {{car['car_type']}} 
                       </p>
-                        
+                        <span><
                     <div class='owner-container'>
                         <a href="mailto:owner@realestate.com" class="btn btn-info" id='email-owner'>Email Owner</a>
                     </div>
@@ -879,6 +900,7 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/cars/new', component: AddCar },
     { path: '/explore', component: Explore },
+    { path: '/explore/Login Successful', component: Explore },
     { path: '/logout', component: Logout },
     { path: '/cars/:car_id', component: ViewCar },
     { path: '/users/:user_id', component: ViewProfile },

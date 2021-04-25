@@ -11,7 +11,17 @@ body {
 
 .section1{
     width: 100%;
+    text-align: left;
+    text-decoration: solid;
+    padding-top: 10rem;
+    margin-left: 80px;
+    margin-right: 80px;
 }
+
+:root {
+    --color-1: #2e294e;
+    --color-2: #E4b363;
+  }
 
 .section2{
     height: 88vh;
