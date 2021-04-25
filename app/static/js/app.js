@@ -41,55 +41,55 @@ const Register = {
   name: 'Register',
   template: `
       <div class="container col-md-8 offset-md-2" id="registration-page">
-      <h1 class="font-weight-bold text-center registration-header">Register New User</h1>
-      <ul v-if=errors class="pl-0">
-        <li v-for="(key,value) in errors" class="flash bg-danger">
-          {{ key }}
-        </li>
-      </ul>
-      <form method="post" @submit.prevent="register_user" id="registrationForm">
-          <div class="form-row">  
+        <h1 class="font-weight-bold registration-header mt-4">Register New User</h1>
+        <ul v-if=errors class="pl-0">
+          <li v-for="(key,value) in errors" class="flash bg-danger">
+            {{ key }}
+          </li>
+        </ul>
+        <form method="post" @submit.prevent="register_user" id="registrationForm" class="w-100">
+            <div class="form-row">  
+                <div class="form-group col-md-6 sm-padding-right">
+                    <label for="username">Username</label><br>
+                    <input type="text" name="username" class='form-control' required/> 
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="password">Password</label><br>
+                    <input type="password" name="password" class='form-control' required/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 sm-padding-right">
+                    <label for="fullname">Fullname</label><br>
+                    <input type="text" name="fullname" class='form-control' required/> 
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label><br>
+                    <input type="email" name="email" class='form-control' required/>
+                </div>
+            </div>
+            <div class="form-row">
               <div class="form-group col-md-6 sm-padding-right">
-                  <label for="username">Username</label><br>
-                  <input type="text" name="username" class='form-control' required/> 
+                <label for="location">Location</label><br>
+                <input type="text" name="location" class='form-control' required/>
               </div>
               <div class="form-group col-md-6">
-                  <label for="password">Password</label><br>
-                  <input type="password" name="password" class='form-control' required/>
+                
               </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-6 sm-padding-right">
-                  <label for="fullname">Fullname</label><br>
-                  <input type="text" name="fullname" class='form-control' required/> 
-              </div>
-              <div class="form-group col-md-6">
-                  <label for="email">Email</label><br>
-                  <input type="email" name="email" class='form-control' required/>
-              </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6 sm-padding-right">
-              <label for="location">Location</label><br>
-              <input type="text" name="location" class='form-control' required/>
             </div>
-            <div class="form-group col-md-6">
-              
+            <div class="form-group">
+                <label for="biography">Biography</label><br>
+                <textarea cols="50" rows="2" name="biography" class="form-control" required></textarea>
             </div>
-          </div>
-          <div class="form-group">
-              <label for="biography">Biography</label><br>
-              <textarea cols="50" rows="2" name="biography" class="form-control" required></textarea>
-          </div>
-          <div class="form-group">
-              <label for="photo"><b>Upload Photo</b></label><br>
-              <input type="file" name="photo" required/> 
-          </div>
-          <div class="text-center">
-              <button type="submit" id="submit-button" class="btn register">Register</button>
-          </div>
-      </form>
-    </div>
+            <div class="form-group">
+                <label for="photo"><b>Upload Photo</b></label><br>
+                <input type="file" name="photo" required/> 
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn submit-button register">Register</button>
+            </div>
+        </form>
+      </div>
   `,
   data(){
     return {
@@ -134,8 +134,8 @@ const Register = {
 const Login = {
   name: 'Login',
   template: `
-    <div class="login-form-container center-block">
-      <h2>Login to your account </h2>
+    <div class="container col-md-8 offset-md-2 login-form-container center-block d-flex flex-column justify-content-center align-items-center">
+      <h2 class="">Login to your account </h2>
       <div v-if=message class="flash">
         {{ message }}
       </div>
@@ -151,7 +151,7 @@ const Login = {
           <label for="password">Password</label><br>
           <input type="password" name="password" class='form-control' required/> 
         </div>
-        <button type="submit" name="submit-btn" class="btn btn-primary btn-block">Login</button>
+        <button type="submit" name="submit-btn" class="btn submit-button w-100 py-1">Login</button>
       </form>
     </div>
   `,
