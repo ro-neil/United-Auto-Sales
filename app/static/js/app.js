@@ -423,9 +423,13 @@ const Explore = {
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              <div class="card-footer text-center bg-info">
+              <span id="car_id" class="d-none" >{{car['id']}} </span>
+
+
+              <div class="card-footer text-center bg-info btn" v-bind:id="car['id']" @click="getID($event)">
                   View more details
               </div>
+              
             </div>
           </div>
         </div>
@@ -465,6 +469,11 @@ const Explore = {
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
       }
+      
+    },
+    getID:function(event){
+      targetId = event.currentTarget.id;
+      this.$router.push(`/cars/${targetId}`)
     },
     search(){
       let self = this;
@@ -509,13 +518,44 @@ const ViewCar = {
   template: `
   <div>
       <h1>View Car</h1>
+      <div class="car">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 view-car">
+                {# <img src="{{ url_for('getImage', filename=_car.photo_name) }}" id='view-car-img' alt="{{ _car.photo_name }}"> #}
+                <div class="card-body vp-body">
+                    <div class="car-info">
+                        <h4 class="card-title pb-1 pl-1">{{car['year']}}  {{car['make']}}</h4>
+                        <div>{{car['model']}}</div>
+                        <div class="description pb-3 md-bold pl-1">{{car['description']}}</div>
+                      
+				              <p class="card-text"><i class="fas fa-bed">
+                      </i> Color  {{car['colour']}}    <i class="fas fa-shower"></i> Body Type {{car['car_type']}} 
+                      </p>
+                      <p class="card-text"><i class="fas fa-bed">
+                      </i> Price $ {{car['price']}}    <i class="fas fa-shower"></i> Transmission {{car['car_type']}} 
+                      </p>
+                        
+                    <div class='owner-container'>
+                        <a href="mailto:owner@realestate.com" class="btn btn-info" id='email-owner'>Email Owner</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      
   </div>
   `,
   data() {
-      return {}
+      return {
+        car:[]
+      }
   },
   created(){
     this.updateNavbar();
+    let self = this;
+    self.fetchCar(self)
   },
   methods: {
     updateNavbar(){
@@ -524,6 +564,23 @@ const ViewCar = {
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
       }
+    },
+    fetchCar(self){
+      fetch("/api/cars/"+this.$route.params.car_id, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+        return response.json();
+        })
+      .then(function (response) {
+        self.car = response;
+        console.log(self.car);
+      })
     }
   }
 };
