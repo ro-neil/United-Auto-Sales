@@ -531,7 +531,7 @@ const ViewProfile = {
             </div>
           </div>
           <div class="profile-right">
-            <h1 class="m-0 bold purple">{{ user_data['name'] }}</h1>
+            <h1 class="m-0 bold">{{ user_data['name'] }}</h1>
             <h2 class="purple bold">@{{ user_data['username'] }}</h2>
             <p class="py-2 text-muted bio">{{ user_data['biography'] }}
 
