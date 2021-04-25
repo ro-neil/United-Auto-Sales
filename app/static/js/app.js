@@ -386,9 +386,11 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5">
-      <div v-if=message v-show="elementVisible" class="flash hideElement">
+
+      <!-- <div v-if=message v-show="elementVisible" class="flash hideElement">
         {{ message }}
-      </div>
+      </div> -->
+
       <h1 class="pb-2">Explore</h1>
       <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -420,10 +422,8 @@ const Explore = {
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              
-              <!-- <span id="car_id" class="d-none" >{{car['id']}} </span> -->
 
-              <div class="card-footer btn submit-button text-center v-bind:id="car['id']" @click="getID($event)">
+              <div class="card-footer btn submit-button text-center" v-bind:id="car['id']" @click="getID($event)">
                   View more details
               </div>
               
@@ -453,28 +453,17 @@ const Explore = {
     })
     .then(function (jsonResponse) {
         self.car_data = jsonResponse;
-        console.log(jsonResponse['message']);
+        if(jsonResponse['message']){
+          self.car_data = []
+        }
+        console.log(jsonResponse);
     })
     .catch(function (error) {
         console.log(error);
     });
-      fetch("/api/cars/"+this.$route.params.message, {
-        method: 'GET',
-        headers: {
-            'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
-        },
-        credentials: 'same-origin'
-      })
-      .then(function (response) {
-        return response.json();
-        })
-      .then(function (response) {
-        self.message = response['message'];
-        self.car =  response;
-        console.log(self.message);
-      })
-    setTimeout(() => this.elementVisible = false, 3000);
+
+    // setTimeout(() => this.elementVisible = false, 3000);
+
   },
   methods: {
     updateNavbar(){
@@ -538,7 +527,7 @@ const ViewCar = {
         <div class="col">
         <section>
             <div class="card h-100 view-car">
-                {# <img src="{{ url_for('getImage', filename=_car.photo_name) }}" id='view-car-img' alt="{{ _car.photo_name }}"> #}
+                <img :src="car['photo']" id='view-car-img' alt="Car Photo">
                 <div class="card-body vp-body">
                     <div class="car-info">
                         <h4 class="card-title pb-1 pl-1">{{car['year']}}  {{car['make']}}</h4>
@@ -582,7 +571,7 @@ const ViewCar = {
       }
     },
     fetchCar(self){
-      fetch("/api/cars/"+this.$route.params.car_id, {
+      fetch(`/api/cars/${this.$route.params.car_id}`, {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
@@ -595,7 +584,7 @@ const ViewCar = {
         })
       .then(function (response) {
         self.car = response;
-        console.log(self.car);
+        console.log(response);
       })
     }
   }

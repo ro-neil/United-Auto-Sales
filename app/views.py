@@ -169,24 +169,6 @@ def getCars():
     response = jsonify(carsData)
     return response
 
-@app.route("/api/cars/<message>", methods=["GET"])
-@requires_auth
-def getCarsFirst(message):
-    """ Get a list of all cars available for sale """
-
-    cars = db.session.query(Car).all()
-    if cars is None:
-        return jsonify(message="No cars available")
-
-    carsData = []
-    for car in cars:
-        # convert sqlalchemy car object to a dictionary object
-        temp = obj_to_dict(car)
-        temp.update(message ='Login Successful')
-        carsData.append(temp)
-    response = jsonify(carsData)
-    print(carsData)
-    return temp
 
 @app.route("/api/cars", methods=["POST"])
 @requires_auth
@@ -239,8 +221,9 @@ def getCar(car_id):
     car = Car.query.get(car_id)
     if car is None:
         return jsonify(message="Car not found")
-    car['photo'] = f"{CAR_DIR}{car['photo']}"
-    return jsonify(obj_to_dict(car))
+    carObj = obj_to_dict(car)
+    carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+    return jsonify(carObj)
 
 
 @app.route("/api/cars/<int:car_id>/favourite", methods=["POST"])
