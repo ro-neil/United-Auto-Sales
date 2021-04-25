@@ -396,7 +396,7 @@ const Explore = {
             <label class="model-label" for="model">Model</label>
             <input type="search" name="model" v-model="model_searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
         </div>
-        <button type="submit" class="btn search-btn align-self-end mb-2 px-5 bg-success text-white">Search</button> 
+        <button type="submit" class="btn search-btn align-self-end mb-2 px-5 text-white">Search</button> 
       </form>
 
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>

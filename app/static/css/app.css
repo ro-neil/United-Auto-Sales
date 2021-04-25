@@ -219,6 +219,15 @@ textarea{
     border-right: 2rem solid white;
 }
 
+.search-btn{
+    background-color: var(--color-1);
+    color: white;
+}
+
+.search-btn:hover{
+    background-color: var(--color-3);
+    color: white;
+}
 .cars{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
