@@ -5,15 +5,18 @@ const Home = {
   template: `
     <div id="home-page-container" class="d-flex">
       <section class="section1">
-          <div class="site-info">
-              <h1>Buy and sell cars online</h1>
-              <p>United auto sales provides the fastest,easiest and most user friendly way to buy or sell cars online. Find a Great Price on the Vehicle You Want. </p>
+          <div class="site-info w-75">
+              <h1>Buy and Sell <br> Cars Online</h1>
+              <p class="py-2">United Auto Sales provides the fastest, easiest and most user friendly way to buy or sell cars online. Find a Great Price on the Vehicle You Want. </p>
           </div>
-          <div class="user-auth d-flex">
-              <button class="btn">Login</button>
-              <button class="btn ml-3">Register</button>
+          <div class="user-auth d-flex ml-0 w-75 pr-5">
+            <router-link to="/register" class="w-50">
+              <button class="btn register-btn w-100">Register</button>
+            </router-link>
+            <router-link to="/login" class="w-50 ml-2">
+              <button class="btn login-btn w-100">Login</button>
+            </router-link> 
           </div>
-          <heart></heart>
       </section>
       <section class="section2">
           <img src="../static/imgs/display_car.jpg" alt="A beautiful car">
@@ -716,9 +719,10 @@ const app = Vue.createApp({
 app.component('app-header', {
   name: 'AppHeader',
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <span class="navbar-brand mb-0">
-        <img src='../static/imgs/car_icon.svg' id='car_icon' alt="A car icon"/> <span id="website-name">United Auto Sales</span>
+        <img src='../static/imgs/car_icon.svg' id='car_icon' class="pb-1" alt="A car icon"/>
+        <span id="website-name">United Auto Sales</span>
       </span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -768,7 +772,7 @@ app.component('app-footer', {
     template: 
     `
     <footer>
-        <div class="container m-4">
+        <div class="container">
         <!-- Footer content goes here -->
         </div>
     </footer>
