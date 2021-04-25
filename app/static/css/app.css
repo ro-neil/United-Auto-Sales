@@ -94,7 +94,6 @@ h1{
 }
 
 #registrationForm{
-    width: 120%;
     padding-top: 2rem;
     border: solid white;
     background-color: #fff;
@@ -117,13 +116,11 @@ h1{
 }
 
 .font-weight-bold.text-center.addCar-header{
-    margin-right:12rem;
     text-align: left;   
 }
 
 
 #addCarForm{
-    width: 120%;
     padding-top: 2rem;
     border: solid white;
     background-color: #fff;

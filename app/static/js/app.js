@@ -261,7 +261,7 @@ const AddCar = {
   name: 'AddCar',
   template: `
     <div v-if=token class="container col-md-8 offset-md-2" id="addCar-page">
-      <h1 class="font-weight-bold text-center addCar-header">Add New Car</h1>
+      <h1 class="font-weight-bold addCar-header mt-4">Add New Car</h1>
       <form method="post" @submit.prevent="add_car" id="addCarForm">
           <div class="form-row">  
               <div class="form-group col-md-6 sm-padding-right">
@@ -324,8 +324,8 @@ const AddCar = {
               <label for="photo"><b>Upload Photo</b></label><br>
               <input type="file" name="photo" required/> 
           </div>
-          <div class="text-center">
-              <button type="submit" id="submit-button" class="btn">Save</button>
+          <div class="">
+              <button type="submit" class="btn submit-button">Save</button>
           </div>
       </form>
     </div>
