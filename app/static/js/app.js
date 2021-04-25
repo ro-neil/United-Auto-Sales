@@ -7,7 +7,7 @@ const Home = {
       <section class="section1">
           <div class="site-info">
               <h1>Buy and sell cars online</h1>
-              <p>United auto sales provides the fastest, </p>
+              <p>United auto sales provides the fastest,easiest and most user friendly way to buy or sell cars online. Find a Great Price on the Vehicle You Want. </p>
           </div>
           <div class="user-auth d-flex">
               <button class="btn">Login</button>
@@ -83,7 +83,7 @@ const Register = {
               <input type="file" name="photo" required/> 
           </div>
           <div class="text-center">
-              <button type="submit" id="submit-button" class="btn bg-info">Register</button>
+              <button type="submit" id="submit-button" class="btn register">Register</button>
           </div>
       </form>
     </div>
@@ -132,7 +132,7 @@ const Login = {
   name: 'Login',
   template: `
     <div class="login-form-container center-block">
-      <h2>Please Log in</h2>
+      <h2>Login to your account </h2>
       <div v-if=message class="flash">
         {{ message }}
       </div>
@@ -322,7 +322,7 @@ const AddCar = {
               <input type="file" name="photo" required/> 
           </div>
           <div class="text-center">
-              <button type="submit" id="submit-button" class="btn bg-info">Save</button>
+              <button type="submit" id="submit-button" class="btn">Save</button>
           </div>
       </form>
     </div>
