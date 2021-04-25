@@ -287,7 +287,7 @@ const AddCar = {
             </div>
             <div class="form-group col-md-6">
               <label for="carType">Car Type</label><br>
-              <select name="carType" id="carType" form="addCarForm" class="w-100">
+              <select name="carType" id="carType" form="addCarForm" class="w-100 form-control">
                 <option value="SUV">SUV</option>
                 <option value="Sedan">Sedan</option>
                 <option value="Coupe">Coupe</option>
@@ -304,7 +304,7 @@ const AddCar = {
           <div class="form-row">
             <div class="form-group col-md-6 sm-padding-right">
               <label for="transmission">Transmission</label><br>
-              <select name="transmission" id="transmissionType" form="addCarForm" class="w-100">
+              <select name="transmission" id="transmissionType" form="addCarForm" class="w-100 form-control">
                 <option value="Automatic">Automatic</option>
                 <option value="Manual">Manual</option>
               </select>
@@ -383,7 +383,7 @@ const Explore = {
   template: `
     <div v-if=token class="explore px-5">
       <h2>Explore</h2>
-      <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around">
+      <form method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
         <div class="make-component mr-2">
             <label class="make-label" for="make">Make</label>
@@ -394,26 +394,15 @@ const Explore = {
             <input type="search" name="model" v-model="model_searchTerm" id="search-model" class="form-control mb-2 mr-sm-2" placeholder="" />
         </div>
         <button type="submit" class="btn search-btn align-self-end mb-2 px-5 bg-success text-white">Search</button> 
-      <!--
-        <div class="form-group d-flex search-bar-container" name="search-bar-container">
-          
-        </div>
-        -->
       </form>
 
-
-      <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE?
-      <a href="static/black_hilux.jpg">path1 </a>
-      <a href="../static/black_hilux.jpg">path2</a> -->
-
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
+      
       <div class="cars">
         <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
           <div class="col">
             <div class="card h-100">
-              <p>{{car['photo']}}</p>
-              <img :src="car['photo']" class="card-img-top" alt="car photo">
-            
+              <img :src="car['photo']" class="card-img-top" alt="car photo">  
               <div class="card-body">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
@@ -499,7 +488,6 @@ const Explore = {
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
-      uploads: '../../../uploads/cars/',
       token: sessionStorage.getItem('united_auto_sales_token')
     }
   }
