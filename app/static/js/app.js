@@ -402,16 +402,17 @@ const Explore = {
       </form>
 
 
-      <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE? -->
+      <!-- HOW CAN BOTH PATHS LEAD TO THE SAME RESOURCE?
       <a href="static/black_hilux.jpg">path1 </a>
-      <a href="../static/black_hilux.jpg">path2</a>
+      <a href="../static/black_hilux.jpg">path2</a> -->
 
       <h3 id='empty-search' class='text-center d-none'>Sorry, we don't have that vehicle.</h3>
       <div class="cars">
         <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
           <div class="col">
             <div class="card h-100">
-              <img src="static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+              <p>{{car['photo']}}</p>
+              <img :src="car['photo']" class="card-img-top" alt="car photo">
             
               <div class="card-body">
                 <div class="d-flex">
@@ -535,7 +536,7 @@ const ViewProfile = {
       <div class="profile-container mb-4 d-flex justify-content-start flex-row">
           <div class="profile-left px-3 pt-3 d-flex justify-content-center">
             <div class="img-container border rounded-circle">
-              <img src="../static/imgs/black_hilux.jpg" alt="Profile Picture" class="rounded-circle w-100 h-100">
+              <img :src="user_data['photo']" alt="Profile Picture" class="rounded-circle w-100 h-100">
             </div>
           </div>
           <div class="profile-right">
@@ -566,7 +567,7 @@ const ViewProfile = {
           <div class="col">
             <div class="card h-100">
 
-              <img src="../static/imgs/black_hilux.jpg" class="card-img-top" alt="car photo">
+              <img :src="car['photo']" class="card-img-top" alt="car photo">
             
               <div class="card-body">
                 <div class="d-flex">
