@@ -621,13 +621,7 @@ const ViewProfile = {
           <div class="profile-right">
             <h1 class="m-0 bold">{{ user_data['name'] }}</h1>
             <h2 class="purple bold">@{{ user_data['username'] }}</h2>
-            <p class="py-2 text-muted bio">{{ user_data['biography'] }}
-
-            Please create all new routes and view functions above this route.
-            This route is now our catch all route for our VueJS single page application.
-
-            </p>
-
+            <p class="py-2 text-muted bio">{{ user_data['biography'] }}</p>
             <div class="user-info mb-3">
                 <span class="purple">Email</span>
                 <span>{{ user_data['email'] }}</span>
