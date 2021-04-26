@@ -262,6 +262,11 @@ const AddCar = {
   name: 'AddCar',
   template: `
     <div v-if=token class="container col-md-8 offset-md-2" id="addCar-page">
+      <transition name="fade" class="mt-5">
+        <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+            {{ flashMessage }}
+        </div>
+      </transition>
       <h1 class="font-weight-bold addCar-header mt-4">Add New Car</h1>
       <form method="post" @submit.prevent="add_car" id="addCarForm">
           <div class="form-row">  
@@ -333,7 +338,12 @@ const AddCar = {
   `,
   data() {
       return {
-        token: sessionStorage.getItem('united_auto_sales_token')
+        token: sessionStorage.getItem('united_auto_sales_token'),
+        flashMessage: '',
+        displayFlash: false,
+        isSuccess: false,
+        alertSuccessClass: 'alert-success',
+        alertErrorClass: 'alert-danger'
       }
   },
   created(){
@@ -363,7 +373,13 @@ const AddCar = {
       .then(function (jsonResponse) {
           
           if (jsonResponse['user_id'] && jsonResponse['transmission']){  // if successful
-            self.$router.push('/explore')
+            self.displayFlash = true;
+            self.isSuccess = true;
+            self.flashMessage = jsonResponse['message'];
+            setTimeout(function() { 
+                self.displayFlash = false;
+                self.$router.push('/explore')
+            }, 3000);
             self.car_data = jsonResponse
           }
           console.log(jsonResponse);
@@ -510,16 +526,11 @@ const Explore = {
 const ViewCar = {
   name: 'ViewCar',
   template: `
-    <transition name="fade">
-    <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
-        {{ flashMessage }}
-    </div>
-    </transition>
     <div class="view-car-container d-flex ml-auto mr-auto">
       <section class="view-car-img-container">
         <img :src="car['photo']" id='view-car-img' class="" alt="Car Photo">
       </section>
-      <section class="view-car-info-container p-4 pb-3">
+      <section class="view-car-info-container p-4 pb-3 w-100 d-flex flex-column">
         <p class="year-make">{{car['year']}}  {{car['make']}}</p>
         <p class="model">{{car['model']}}</p>
         <p class="description gray">{{car['description']}}</p>
@@ -533,9 +544,9 @@ const ViewCar = {
           <p class="transmission gray">Transmission</p>
           <p class="transmission value">{{car['transmission']}}</p>
         </div>
-        <div class='footer d-flex justify-content-between pb-3 h-50 align-items-end '>
-            <a href="mailto:owner@realestate.com" class="btn submit-button" id='email-owner-btn'>Email Owner</a>
-            <heart @click=addToFavourites></heart>
+        <div class='view-car-footer d-flex justify-content-between align-items-end h-100'>
+          <a href="mailto:owner@realestate.com" class="btn submit-button" id='email-owner-btn'>Email Owner</a>
+          <heart @click=addToFavourites></heart>
         </div>
       </section>
     </div>
@@ -543,11 +554,6 @@ const ViewCar = {
   data() {
       return {
         car:[],
-        flashMessage: '',
-        displayFlash: false,
-        isSuccess: false,
-        alertSuccessClass: 'alert-success',
-        alertErrorClass: 'alert-danger'
       }
   },
   created(){
@@ -580,7 +586,8 @@ const ViewCar = {
         console.log(response);
       })
     },
-    addToFavourites(self) {
+    addToFavourites() {
+      let self = this;
       fetch(`/api/cars/${this.$route.params.car_id}/favourite`, {
         method: 'POST',
         headers: {

@@ -255,7 +255,6 @@ textarea{
     padding-bottom: .125rem;
 }
 
-
 .view-car{
     display: flex;
     flex-direction: row;
@@ -283,7 +282,7 @@ textarea{
 
 .explore{
     margin-top: 5rem;
-    width: 75%;
+    width: 90%;
 }
 .card-body *{
     font-weight: 700;
@@ -342,6 +341,7 @@ textarea{
     grid-template-columns: 1fr 2fr 1.5fr 1fr;
     font-weight: 700;
 }
+
 .gray{
     color: #606060;
 }
