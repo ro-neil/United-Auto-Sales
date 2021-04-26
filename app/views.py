@@ -231,6 +231,9 @@ def getCar(car_id):
 def addFavourite(car_id):
     """ Favourites a specific car """
 
+    if Favourite.query.get((car_id,current_user.get_id())):
+        return jsonify({"message":"Car already favourited"})
+        
     favourite = Favourite(car_id, current_user.get_id())
     db.session.add(favourite)
     db.session.commit()
