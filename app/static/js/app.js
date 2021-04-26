@@ -652,7 +652,7 @@ const ViewProfile = {
                 </div>
                 <p class="card-text text-muted md-bold">{{ car['model'] }}</p>
               </div>
-              <div class="card-footer btn submit-button text-center">
+              <div class="card-footer btn submit-button text-center" v-bind:id="car['id']" @click="getID($event)">
                   View more details
               </div>
             </div>
@@ -730,7 +730,11 @@ const ViewProfile = {
       .catch(function (error) {
           console.log(error);
       });
-    }
+    },
+    getID:function(event){
+      targetId = event.currentTarget.id;
+      this.$router.push(`/cars/${targetId}`)
+    },
   }
 };
 

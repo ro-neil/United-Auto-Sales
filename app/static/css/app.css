@@ -310,6 +310,7 @@ textarea{
 #view-car-img{
     border-radius: 6px 0 0 6px;
     width: 100%;
+    height: 100%;
 }
 .view-car-info-container .year-make{
     font-size: 24px;
