@@ -41,12 +41,12 @@ const Register = {
   name: 'Register',
   template: `
       <div class="container col-md-8 offset-md-2" id="registration-page">
+        <transition name="fade" class="mt-5">
+          <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+              {{ flashMessage }}
+          </div>
+        </transition>
         <h1 class="font-weight-bold registration-header mt-4">Register New User</h1>
-        <ul v-if=errors class="pl-0">
-          <li v-for="(key,value) in errors" class="flash bg-danger">
-            {{ key }}
-          </li>
-        </ul>
         <form method="post" @submit.prevent="register_user" id="registrationForm" class="w-100">
             <div class="form-row">  
                 <div class="form-group col-md-6 sm-padding-right">
@@ -94,7 +94,11 @@ const Register = {
   data(){
     return {
       user_data: '',
-      errors: {}
+      flashMessage: '',
+      displayFlash: false,
+      isSuccess: false,
+      alertSuccessClass: 'alert-success',
+      alertErrorClass: 'alert-danger'
     }
   },
   methods: {
@@ -111,17 +115,23 @@ const Register = {
           credentials: 'same-origin'
       })
       .then(function (response) {
-          return response.json();
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
       })
       .then(function (jsonResponse) {
-          
-          if (jsonResponse['id'] && jsonResponse['date_joined']){  // if successful
+        if (jsonResponse['error']){
+          self.displayFlash = true;
+          self.flashMessage = jsonResponse['error'];
+          setTimeout(function() { 
+              self.displayFlash = false;
+          }, 3000);
+        } else {
             self.$router.push('/login')
             self.user_data = jsonResponse
-            sessionStorage.setItem('united_auto_sales_user',JSON.stringify(jsonResponse))
-          } else if (jsonResponse['error']){
-            self.errors = jsonResponse
-          }
+            sessionStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse))
+        }
           console.log(jsonResponse);
       })
       .catch(function (error) {
@@ -135,13 +145,12 @@ const Login = {
   name: 'Login',
   template: `
     <div class="container col-md-8 offset-md-2 login-form-container center-block d-flex flex-column justify-content-center align-items-center">
+      <transition name="fade" class="mt-5">
+        <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+            {{ flashMessage }}
+        </div>
+      </transition>
       <h2 class="">Login to your account </h2>
-      <div v-if=message class="flash">
-        {{ message }}
-      </div>
-      <div v-if=errors class="text-white bg-danger flash">
-        {{ errors }}
-      </div>
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
           <label for="username">Username</label><br>
@@ -157,9 +166,11 @@ const Login = {
   `,
   data(){
     return {
-      message: "",
-      errors: "",
-      state: false
+      flashMessage: '',
+      displayFlash: false,
+      isSuccess: false,
+      alertSuccessClass: 'alert-success',
+      alertErrorClass: 'alert-danger'
     }
   },
   methods: {
@@ -176,6 +187,9 @@ const Login = {
           credentials: 'same-origin'
       })
       .then(function (response) {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
           return response.json();
       })
       .then(function (jsonResponse) {
@@ -186,13 +200,19 @@ const Login = {
             } else {
               console.log('No Web Storage support..');
             }
-            self.message = jsonResponse['message']; 
-            let m = jsonResponse['message']; 
-            self.$router.push(`/explore/${m}`);
-            ViewProfile.data['user'] =
+            self.displayFlash = true;
+            self.flashMessage = jsonResponse['message'];
+            setTimeout(function() { 
+                self.displayFlash = false;
+                self.$router.push(`/explore/${self.message}`);
             self.updateNavbar();
+            }, 3000);
           } else {
-            self.errors = jsonResponse['error'];
+            self.displayFlash = true;
+            self.flashMessage = jsonResponse['error'];
+            setTimeout(function() { 
+                self.displayFlash = false;
+            }, 3000);
           }
           console.log(jsonResponse);
       })
@@ -229,6 +249,9 @@ const Logout = {
       credentials: 'same-origin'
     })
     .then(function (response) {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
         return response.json();
     })
     .then(function (jsonResponse) {
@@ -368,24 +391,29 @@ const AddCar = {
           credentials: 'same-origin'
       })
       .then(function (response) {
+          if (!response.ok) {
+            self.displayFlash = true;
+            self.flashMessage = "Car could not be added";
+            setTimeout(function() { 
+              self.displayFlash = false;
+              self.$router.push('/explore')
+            }, 3000);
+            throw Error(response.statusText);
+          }
           return response.json();
       })
       .then(function (jsonResponse) {
-          
-          if (jsonResponse['user_id'] && jsonResponse['transmission']){  // if successful
-            self.displayFlash = true;
-            self.isSuccess = true;
-            self.flashMessage = jsonResponse['message'];
-            setTimeout(function() { 
-                self.displayFlash = false;
-                self.$router.push('/explore')
-            }, 3000);
-            self.car_data = jsonResponse
-          }
-          console.log(jsonResponse);
+          self.car_data = jsonResponse
+          self.displayFlash = true;
+          self.isSuccess = true;
+          self.flashMessage = "Car succesfully added";
+          setTimeout(function() { 
+              self.displayFlash = false;
+              self.$router.push('/explore')
+          }, 3000);
       })
       .catch(function (error) {
-          console.log(error);
+          console.log('Looks like there was a problem: \n', error);
       });
     },
     updateNavbar(){
@@ -460,6 +488,9 @@ const Explore = {
       credentials: 'same-origin'
     })
     .then(function (response) {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
         return response.json();
     })
     .then(function (jsonResponse) {
@@ -597,6 +628,9 @@ const ViewCar = {
         credentials: 'same-origin'
       })
       .then(function (response) {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
           return response.json();
       })
       .then(function (jsonResponse) {
@@ -708,6 +742,9 @@ const ViewProfile = {
         credentials: 'same-origin'
       })
       .then(function (response) {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
           return response.json();
       })
       .then(function (jsonResponse) {
@@ -728,6 +765,9 @@ const ViewProfile = {
         credentials: 'same-origin'
       })
       .then(function (response) {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
           return response.json();
       })
       .then(function (jsonResponse) {
