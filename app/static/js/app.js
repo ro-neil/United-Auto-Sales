@@ -202,9 +202,10 @@ const Login = {
             }
             self.displayFlash = true;
             self.flashMessage = jsonResponse['message'];
+            self.isSuccess = true;
             setTimeout(function() { 
                 self.displayFlash = false;
-                self.$router.push(`/explore/${self.message}`);
+                self.$router.push('/explore');
             self.updateNavbar();
             }, 3000);
           } else {
