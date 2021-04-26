@@ -165,6 +165,7 @@ def getCars():
         # convert sqlalchemy car object to a dictionary object
         carObj = obj_to_dict(car)
         carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        carObj['price'] = numberFormatter(carObj['price'])
         carsData.append(carObj)
     response = jsonify(carsData)
     return response
@@ -223,6 +224,7 @@ def getCar(car_id):
         return jsonify(message="Car not found")
     carObj = obj_to_dict(car)
     carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+    carObj['price'] = numberFormatter(carObj['price'])
     return jsonify(carObj)
 
 
@@ -268,6 +270,7 @@ def search():
     for car in cars:
         carObj = obj_to_dict(car)
         carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        carObj['price'] = numberFormatter(carObj['price'])
         data.append(carObj)
     
     return jsonify(data)
@@ -304,6 +307,7 @@ def getFavourites(user_id):
 
         carObj = obj_to_dict(car)
         carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+        carObj['price'] = numberFormatter(carObj['price'])
 
         data.append(carObj)
     return jsonify(data)
@@ -368,6 +372,23 @@ def obj_to_dict(obj):
             data[k] = v
     return data
 
+def numberFormatter(price, sep=','):
+    '''Formats a number to include a thousandths separator'''
+    price = str(price)
+    pos = price.find('.') 
+    if pos > 0:
+        price = price[:pos]
+    priceLength = len(price)
+    commaPosition = priceLength % 3
+    if commaPosition == 0:
+        commaPosition += 3
+    formattedPrice = ""  
+    for i in range(0, priceLength):
+        if i == commaPosition:
+            formattedPrice += (sep)
+            commaPosition += 3
+        formattedPrice += price[i]
+    return formattedPrice
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

@@ -385,7 +385,7 @@ const AddCar = {
 const Explore = {
   name: 'Explore',
   template: `
-    <div v-if=token class="explore px-5">
+    <div v-if=token class="explore px-5 mx-auto pb-5">
       <h1 class="pb-2">Explore</h1>
       <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -407,7 +407,7 @@ const Explore = {
           <div class="col">
             <div class="card h-100">
               <img :src="car['photo']" class="card-img-top" alt="car photo">  
-              <div class="card-body">
+              <div class="card-body px-2">
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
                   <div id="price-tag" class="badge px-2 pt-2 text-light md-bold ml-1">

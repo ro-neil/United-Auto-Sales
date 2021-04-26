@@ -283,6 +283,10 @@ textarea{
 
 .explore{
     margin-top: 5rem;
+    width: 75%;
+}
+.card-body *{
+    font-weight: 700;
 }
 
 .card-footer.btn{
@@ -294,7 +298,14 @@ textarea{
     background-color: var(--color-3);
     color: white;
 }
-
+#price-tag{
+    height: 1.8rem;
+    margin-top: 2px;
+}
+#price{
+    font-weight: 900;
+    letter-spacing: 1px;
+}
 /***********VIEW CAR PAGE*******/
 
 .view-car-container{
