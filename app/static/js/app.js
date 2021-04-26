@@ -386,11 +386,6 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5">
-
-      <!-- <div v-if=message v-show="elementVisible" class="flash hideElement">
-        {{ message }}
-      </div> -->
-
       <h1 class="pb-2">Explore</h1>
       <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -416,7 +411,7 @@ const Explore = {
                 <div class="d-flex">
                   <h6 class=" mr-auto pt-2">{{ car['year'] }} {{ car['make'] }}</h6>
                   <div id="price-tag" class="badge px-2 pt-2 text-light md-bold ml-1">
-                    <img src="static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
+                    <img src="../static/imgs/price_tag.svg" alt="price tag" class="pb-1" style="height: 25px;">
                     <span id="price" class="pl-2">&#36{{ car['price'] }}</span>
                   </div>
                 </div>
@@ -461,9 +456,6 @@ const Explore = {
     .catch(function (error) {
         console.log(error);
     });
-
-    // setTimeout(() => this.elementVisible = false, 3000);
-
   },
   methods: {
     updateNavbar(){
@@ -471,8 +463,7 @@ const Explore = {
       let navItems = document.getElementsByClassName('dynamic-link');
       for (let element = 0; element < navItems.length; element++) {
         navItems[element].classList.remove('d-none');
-      }
-      
+      } 
     },
     getID:function(event){
       targetId = event.currentTarget.id;
@@ -507,7 +498,6 @@ const Explore = {
   },
   data() {
     return {
-      elementVisible: true,
       message:'',
       car_data: [],
       make_searchTerm: '',
@@ -520,41 +510,44 @@ const Explore = {
 const ViewCar = {
   name: 'ViewCar',
   template: `
-  <div>
-      <h1>View Car</h1>
-      <div class="car">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-        <section>
-            <div class="card h-100 view-car">
-                <img :src="car['photo']" id='view-car-img' alt="Car Photo">
-                <div class="card-body vp-body">
-                    <div class="car-info">
-                        <h4 class="card-title pb-1 pl-1">{{car['year']}}  {{car['make']}}</h4>
-                        <div>{{car['model']}}</div>
-                        <div class="description pb-3 md-bold pl-1">{{car['description']}}</div>
-                      
-				              <p class="card-text"><i class="fas fa-bed">
-                      </i> Color  {{car['colour']}}    <i class="fas fa-shower"></i> Body Type {{car['car_type']}} 
-                      </p>
-                      <p class="card-text"><i class="fas fa-bed">
-                      </i> Price $ {{car['price']}}    <i class="fas fa-shower"></i> Transmission {{car['car_type']}} 
-                      </p>
-                        <span><
-                    <div class='owner-container'>
-                        <a href="mailto:owner@realestate.com" class="btn btn-info" id='email-owner'>Email Owner</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <transition name="fade">
+    <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+        {{ flashMessage }}
     </div>
-</div>
-      
-  </div>
+    </transition>
+    <div class="view-car-container d-flex ml-auto mr-auto">
+      <section class="view-car-img-container">
+        <img :src="car['photo']" id='view-car-img' class="" alt="Car Photo">
+      </section>
+      <section class="view-car-info-container p-4 pb-3">
+        <p class="year-make">{{car['year']}}  {{car['make']}}</p>
+        <p class="model">{{car['model']}}</p>
+        <p class="description gray">{{car['description']}}</p>
+        <div class="additional-info">
+          <p class="color gray">Color</p>
+          <p class="color value">{{car['colour']}}</p>
+          <p class="body-type gray">Body Type</p>
+          <p class="body-type value">{{car['car_type']}}</p>
+          <p class="price gray">Price</p>
+          <p class="price value">&#36{{car['price']}}</p>
+          <p class="transmission gray">Transmission</p>
+          <p class="transmission value">{{car['transmission']}}</p>
+        </div>
+        <div class='footer d-flex justify-content-between pb-3 h-50 align-items-end '>
+            <a href="mailto:owner@realestate.com" class="btn submit-button" id='email-owner-btn'>Email Owner</a>
+            <heart @click=addToFavourites></heart>
+        </div>
+      </section>
+    </div>
   `,
   data() {
       return {
-        car:[]
+        car:[],
+        flashMessage: '',
+        displayFlash: false,
+        isSuccess: false,
+        alertSuccessClass: 'alert-success',
+        alertErrorClass: 'alert-danger'
       }
   },
   created(){
@@ -586,6 +579,31 @@ const ViewCar = {
         self.car = response;
         console.log(response);
       })
+    },
+    addToFavourites(self) {
+      fetch(`/api/cars/${this.$route.params.car_id}/favourite`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          self.displayFlash = true;
+          self.isSuccess = true;
+          self.flashMessage = jsonResponse['message'];
+          setTimeout(function() { 
+              self.displayFlash = false; 
+          }, 3000);
+          console.log(jsonResponse)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
   }
 };
@@ -751,26 +769,6 @@ const NotFound = {
 };
 
 
-function addToFavourites(self,car_id) {
-  fetch(`/api/cars/${car_id}/favourite`, {
-    method: 'POST',
-    headers: {
-        'X-CSRFToken': csrf_token,
-        'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
-    },
-    credentials: 'same-origin'
-  })
-  .then(function (response) {
-      return response.json();
-  })
-  .then(function (jsonResponse) {
-      self.message = jsonResponse['message'];
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
-}
-
 /* CREATE APP */
 const app = Vue.createApp({
   components: {
@@ -858,7 +856,7 @@ app.component('heart', {
   name: 'heart',
   template:
   `
-  <div @click="change" class="heart-container border rounded-circle d-flex justify-content-center align-items-center">
+  <div @click="change" id="heart-container" class="border rounded-circle d-flex justify-content-center align-items-center">
         <img src="../static/imgs/favourite_empty.svg" alt="empty heart icon" id="heart-empty" class="heart">
         <img src="../static/imgs/favourite_filled.svg" alt="empty heart icon" id="heart-filled" class="heart d-none">
   </div>
@@ -867,11 +865,15 @@ app.component('heart', {
   methods: {
     change(){
       let hearts = document.getElementsByClassName('heart');
+      let container = document.getElementById('heart-container');
       for(let heart of hearts){
-        if(heart.classList.contains('d-none'))
+        if(heart.classList.contains('d-none')){
           heart.classList.remove('d-none');
-        else
+          container.style.backgroundColor = "rgba(228, 179, 99, 0.8)";
+      }else{
           heart.classList.add('d-none');
+          container.style.backgroundColor = "#ffffff";
+      }
       }
     }
   }

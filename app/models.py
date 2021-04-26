@@ -91,9 +91,8 @@ class Favourite(db.Model):
 
     __tablename__ = 'Favourites'
 
-    id = db.Column(db.Integer, primary_key=True)
-    car_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
+    car_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
 
     def __init__(self,car_id,user_id):
         self.car_id = car_id
@@ -101,9 +100,9 @@ class Favourite(db.Model):
 
     def get_id(self):
         try:
-            return unicode(self.id)  # python 2 support
+            return unicode((self.car_id, self.user_id))  # python 2 support
         except NameError:
-            return str(self.id)  # python 3 support
+            return str((self.car_id, self.user_id))  # python 3 support
 
     def __repr__(self):
         return '<Favourite %r %r>' % (self.user_id, self.car_id)

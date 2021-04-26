@@ -204,13 +204,13 @@ textarea{
 }
 .submit-button{
     margin-top: 0.8rem;
-    background-color: var(--color-2);
-    color:#000;
+    background-color: var(--color-1);
+    color: white;
 }
 
 .submit-button:hover{
-    background-color: var(--color-1);
-    color: white;
+    background-color: var(--color-2);
+    color:#000;
 }
 
 #registration-form{
@@ -295,6 +295,63 @@ textarea{
     color: white;
 }
 
+/***********VIEW CAR PAGE*******/
+
+.view-car-container{
+    margin-top: 6rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border-radius: 6px;
+    max-width: 80%;
+}
+.view-car-img-container{
+    border-radius: 6px;
+    max-width: 40%;
+}
+#view-car-img{
+    border-radius: 6px 0 0 6px;
+    width: 100%;
+}
+.view-car-info-container .year-make{
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 0;
+    color: black;
+}
+.view-car-info-container .model{
+    color: #606060;
+    font-weight: 700;
+    font-size: 18px;
+}
+.view-car-info-container .description{
+    font-weight: 600;
+}
+.additional-info{
+    display:grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1fr;
+    font-weight: 700;
+}
+.gray{
+    color: #606060;
+}
+@media (max-width: 768px) {
+    .view-car-container{
+        flex-direction: column;
+    }
+    .view-car-img-container{
+        max-width: 100%;
+    }
+    .additional-info{
+        grid-template-columns: 1fr 1fr;
+    }
+    .additional-info .value{
+        margin-left: 2rem;
+    }
+}
+
+
+/********END VIEW CAR PAGE******/
+
+
 /*********PROFILE PAGE********/
 
 .profile-page{
@@ -347,13 +404,13 @@ textarea{
 .bold{
     font-weight: 800;
 }
-.heart-container{
-    height: 2rem;
-    width: 2rem;
+#heart-container{
+    height: 30px;
+    width: 30px;
 }
 .heart{
-    width: 60%;
-    height: 60%;
+    width: 15px;
+    height: 15px;
 }
 .home-btn{
     
