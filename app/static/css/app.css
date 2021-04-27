@@ -345,7 +345,10 @@ textarea{
 .gray{
     color: #606060;
 }
-@media (max-width: 768px) {
+
+/* PHONE */
+@media only screen and (max-width: 768px) {
+
     .view-car-container{
         flex-direction: column;
     }
@@ -358,8 +361,31 @@ textarea{
     .additional-info .value{
         margin-left: 2rem;
     }
+    /* HOME PAGE */
+    #home-page-container{
+        flex-direction: column;
+        flex-direction: column-reverse;
+        margin-bottom: 2rem;
+    }
+    .section2{
+        margin-top: 5rem;
+        height: 15rem;
+    }
+    .section1{
+        padding-top: 2rem;
+    }
+    .register-btn{
+        padding-right: 1rem;
+    }
+    .user-auth{
+        width: 100% !important;
+    }
 }
 
+/* IPAD & LAPTOP */
+@media only screen and (min-width: 768px) {
+
+}
 
 /********END VIEW CAR PAGE******/
 
