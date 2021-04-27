@@ -380,6 +380,11 @@ textarea{
     .user-auth{
         width: 100% !important;
     }
+
+    /* LOGIN FORM */
+    #loginForm{
+        width: 100%;
+    }
 }
 
 /* IPAD & LAPTOP */
