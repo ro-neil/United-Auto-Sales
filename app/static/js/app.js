@@ -654,7 +654,7 @@ const ViewProfile = {
   name: 'ViewProfile',
   template: `
     <div class="profile-page d-flex flex-column">
-      <div class="profile-container mb-4 d-flex justify-content-start flex-row">
+      <div class="profile-container mb-4 d-flex justify-content-start">
           <div class="profile-left px-3 pt-3 d-flex justify-content-center">
             <div class="img-container border rounded-circle">
               <img :src="user_data['photo']" alt="Profile Picture" class="rounded-circle w-100 h-100">
@@ -662,15 +662,16 @@ const ViewProfile = {
           </div>
           <div class="profile-right">
             <h1 class="m-0 bold">{{ user_data['name'] }}</h1>
-            <h2 class="purple bold">@{{ user_data['username'] }}</h2>
+            <h2 class="bold">@{{ user_data['username'] }}</h2>
             <p class="py-2 text-muted bio">{{ user_data['biography'] }}</p>
             <div class="user-info mb-3">
-                <span class="purple">Email</span>
-                <span>{{ user_data['email'] }}</span>
-                <span class="purple">Location</span>
-                <span>{{ user_data['location'] }}</span>
-                <span class="purple">Joined</span>
-                <span>{{ formatDate(user_data['date_joined']) }}</span>
+                <span class="key">Email</span>
+                <span class='value'>{{ user_data['email'] }}</span>
+                <span class="key">Location</span>
+                <span class='value'>{{ user_data['location'] }}</span>
+
+                <span class="key">Joined</span>
+                <span class='value'>{{ formatDate(user_data['date_joined']) }}</span>
             </div>
           </div>
       </div>
