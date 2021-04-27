@@ -395,6 +395,22 @@ textarea{
     .cars{
         grid-template-columns: repeat(1, 1fr);
     }
+    #search-form{
+        justify-content: left !important;
+    }
+
+    .make-component .model-component{
+        width: 100%;
+    }
+    .view-car-container{
+        margin-bottom: 2rem;
+    }
+    #view-car-img {
+        border-radius: 6px 6px 0 0 ;
+    }
+    .profile-container{
+        flex-direction: column;
+    }
 
 
 }
