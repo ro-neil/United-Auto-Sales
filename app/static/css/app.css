@@ -94,7 +94,7 @@ h1{
 }
 
 .font-weight-bold.text-center.registration-header{
-    margin-right:12rem;
+    /* margin-right:12rem; */
     text-align: left;   
 }
 
@@ -361,6 +361,7 @@ textarea{
     .additional-info .value{
         margin-left: 2rem;
     }
+
     /* HOME PAGE */
     #home-page-container{
         flex-direction: column;
@@ -484,13 +485,14 @@ textarea{
     }
     .registration-header{
         font-size: 30px;
-        text-align: center;
+        text-align: center;  
     }
     #registrationForm{
         padding-left: 1rem;
         padding-right: 1rem;
         height: unset !important;
     }
+
 }
 
 
