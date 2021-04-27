@@ -93,11 +93,6 @@ h1{
     padding-top: 3rem;
 }
 
-.font-weight-bold.text-center.registration-header{
-    margin-right:12rem;
-    text-align: left;   
-}
-
 #registrationForm{
     padding-top: 2rem;
     border: solid white;
