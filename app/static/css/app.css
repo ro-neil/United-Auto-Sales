@@ -209,7 +209,7 @@ textarea{
 }
 
 #registration-form{
-    padding: 1.5rem 8rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
     margin-bottom:1rem;
     background-color:#fff;
     border-radius: 5px;
@@ -356,6 +356,7 @@ textarea{
     .additional-info .value{
         margin-left: 2rem;
     }
+
     /* HOME PAGE */
     #home-page-container{
         flex-direction: column;
@@ -382,10 +383,12 @@ textarea{
     }
 
     /* EXPLORE PAGE */
+    .search-btn {
+        margin-top: 1rem;
+    }
     .explore{
         width: 100%;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding: 0 0 2rem 0 !important;
     }
     .cars{
         grid-template-columns: repeat(1, 1fr);
@@ -393,22 +396,100 @@ textarea{
     #search-form{
         justify-content: left !important;
     }
-
     .make-component .model-component{
         width: 100%;
     }
+
+    /* VIEW CAR PAGE */
     .view-car-container{
         margin-bottom: 2rem;
     }
     #view-car-img {
         border-radius: 6px 6px 0 0 ;
     }
+
+
+    /* PROFILE PAGE */
+    .profile-page{
+        padding: 0 !important;
+        height: unset !important;
+        margin-bottom: 2rem;
+    }
     .profile-container{
-        flex-direction: column;
+        flex-direction: column !important;
+    }
+    .profile-right{
+        padding: 1rem 1rem 0 1rem !important;
+    }
+    .profile-right h1 {
+        font-size:2rem !important;
+    }
+    .profile-right .bold {
+        text-align: center;
+    }
+    .user-info {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: repeat(6, 1fr) !important;
+        font-weight: 800;
+        min-width:unset !important;
+    }
+    .user-info .value{
+        margin-left: 2rem;
+        line-height: 1;
+    }
+    .user-info .key{
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--color-1);
+        line-height: 2;  
+    }
+    h2.bold{
+        text-align: center;
     }
 
 
+    /* ADD CAR PAGE */
+    #addCar-page{
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    #addCarForm{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .form-row{
+        width: 100% !important;
+    }
+    .form-row .sm-padding-right {
+        border-right: none;
+    }
+    textarea.form-control{
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+
+    /* REGISTRATION */
+    #registration-page{
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .registration-header{
+        font-size: 30px;
+        text-align: center;  
+    }
+    #registrationForm{
+        padding-left: 1rem;
+        padding-right: 1rem;
+        height: unset !important;
+    }
+
 }
+
 
 /* IPAD & LAPTOP */
 @media only screen and (min-width: 768px) {
