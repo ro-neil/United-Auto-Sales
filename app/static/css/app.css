@@ -381,10 +381,22 @@ textarea{
         width: 100% !important;
     }
 
-    /* LOGIN FORM */
+    /* LOGIN PAGE */
     #loginForm{
         width: 100%;
     }
+
+    /* EXPLORE PAGE */
+    .explore{
+        width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .cars{
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+
 }
 
 /* IPAD & LAPTOP */
