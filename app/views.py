@@ -228,6 +228,27 @@ def getCar(car_id):
     return jsonify(carObj)
 
 
+@app.route("/api/cars/<int:car_id>/remove", methods=["GET"])
+@requires_auth
+def removeCar(car_id):
+    """ Deletes a specific car """
+
+    car = Car.query.get(car_id)
+    if car is None:
+        return jsonify(message="Car not found")
+
+    if car.user_id == current_user.get_id():
+        path = os.path.join(app.config['CARS_FOLDER'], car.photo_name)
+        os.remove(path)
+        
+        db.session.delete(car)
+        db.session.commit()
+        
+        return jsonify(message="Car Successfully Removed")
+
+    return jsonify(message="Not allowed")
+
+
 @app.route("/api/cars/<int:car_id>/favourite", methods=["POST"])
 @requires_auth
 def addFavourite(car_id):

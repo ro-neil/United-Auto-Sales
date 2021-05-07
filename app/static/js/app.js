@@ -1,5 +1,16 @@
 /* Add your Application JavaScript */
 
+function flashMessage(obj) {
+  if (obj.flashMessage){
+    obj.displayFlash = true;
+    obj.isSuccess = true;
+    setTimeout(function() { 
+      obj.displayFlash = false;
+        sessionStorage.removeItem('flash')
+    }, 3000);
+  }
+}
+
 const Home = {
   name: 'Home',
   template: `
@@ -200,14 +211,9 @@ const Login = {
             } else {
               console.log('No Web Storage support..');
             }
-            self.displayFlash = true;
-            self.flashMessage = jsonResponse['message'];
-            self.isSuccess = true;
-            setTimeout(function() { 
-                self.displayFlash = false;
-                self.$router.push('/explore');
+            self.$router.push('/explore');
             self.updateNavbar();
-            }, 3000);
+            sessionStorage.setItem('flash',jsonResponse['message'])
           } else {
             self.displayFlash = true;
             self.flashMessage = jsonResponse['error'];
@@ -259,6 +265,8 @@ const Logout = {
         self.$router.push('/');
         self.updateNavbar();
         sessionStorage.removeItem('united_auto_sales_token');
+        sessionStorage.removeItem('united_auto_sales_user');
+        sessionStorage.removeItem('flash');
         self.message = jsonResponse['message'];
     })
     .catch(function (error) {
@@ -363,7 +371,7 @@ const AddCar = {
   data() {
       return {
         token: sessionStorage.getItem('united_auto_sales_token'),
-        flashMessage: '',
+        flashMessage: sessionStorage.getItem('flash'),
         displayFlash: false,
         isSuccess: false,
         alertSuccessClass: 'alert-success',
@@ -376,6 +384,7 @@ const AddCar = {
       return
     }
     this.updateNavbar();
+    flashMessage(this)
   },
   methods: {
     add_car(){
@@ -393,25 +402,16 @@ const AddCar = {
       })
       .then(function (response) {
           if (!response.ok) {
-            self.displayFlash = true;
-            self.flashMessage = "Car could not be added";
-            setTimeout(function() { 
-              self.displayFlash = false;
-              self.$router.push('/explore')
-            }, 3000);
+            sessionStorage.setItem('flash', "Car could not be added")
+            self.$router.push('/explore')
             throw Error(response.statusText);
           }
           return response.json();
       })
       .then(function (jsonResponse) {
           self.car_data = jsonResponse
-          self.displayFlash = true;
-          self.isSuccess = true;
-          self.flashMessage = "Car succesfully added";
-          setTimeout(function() { 
-              self.displayFlash = false;
-              self.$router.push('/explore')
-          }, 3000);
+          sessionStorage.setItem('flash', "Car succesfully added")
+          self.$router.push('/explore')
       })
       .catch(function (error) {
           console.log('Looks like there was a problem: \n', error);
@@ -431,6 +431,11 @@ const Explore = {
   name: 'Explore',
   template: `
     <div v-if=token class="explore px-5 mx-auto pb-5">
+      <transition name="fade" class="mt-5">
+        <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+            {{ flashMessage }}
+        </div>
+      </transition>
       <h1 class="pb-2">Explore</h1>
       <form id='search-form' method="get" @submit.prevent="search" class="form-inline d-flex bg-white rounded p-4 justify-content-around mb-5">
         <label class="sr-only" for="search-bar-container">Search</label>
@@ -478,8 +483,9 @@ const Explore = {
       this.$router.push('/login')
       return
     }
-    this.updateNavbar();
     let self = this;
+    self.updateNavbar();
+    flashMessage(self)
     fetch("/api/cars", {
       method: 'GET',
       headers: {
@@ -546,11 +552,15 @@ const Explore = {
   },
   data() {
     return {
-      message:'',
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
-      token: sessionStorage.getItem('united_auto_sales_token')
+      token: sessionStorage.getItem('united_auto_sales_token'),
+      flashMessage: sessionStorage.getItem('flash'),
+      displayFlash: false,
+      isSuccess: false,
+      alertSuccessClass: 'alert-success',
+      alertErrorClass: 'alert-danger'
     }
   }
 };
