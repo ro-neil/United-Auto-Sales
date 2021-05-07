@@ -1,9 +1,9 @@
 /* Add your Application JavaScript */
 
-function flashMessage(obj) {
+function flashMessage(obj, success=true) {
   if (obj.flashMessage){
     obj.displayFlash = true;
-    obj.isSuccess = true;
+    obj.isSuccess = success;
     setTimeout(function() { 
       obj.displayFlash = false;
         sessionStorage.removeItem('flash')
@@ -105,7 +105,7 @@ const Register = {
   data(){
     return {
       user_data: '',
-      flashMessage: '',
+      flashMessage: sessionStorage.getItem('flash'),
       displayFlash: false,
       isSuccess: false,
       alertSuccessClass: 'alert-success',
@@ -142,6 +142,7 @@ const Register = {
             self.$router.push('/login')
             self.user_data = jsonResponse
             sessionStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse))
+            sessionStorage.setItem('flash','Registered successfully')
         }
           console.log(jsonResponse);
       })
@@ -175,9 +176,13 @@ const Login = {
       </form>
     </div>
   `,
+  created(){
+    this.updateNavbar();
+    flashMessage(this);
+  },
   data(){
     return {
-      flashMessage: '',
+      flashMessage: sessionStorage.getItem('flash'),
       displayFlash: false,
       isSuccess: false,
       alertSuccessClass: 'alert-success',
@@ -213,7 +218,7 @@ const Login = {
             }
             self.$router.push('/explore');
             self.updateNavbar();
-            sessionStorage.setItem('flash',jsonResponse['message'])
+            sessionStorage.setItem('flash',jsonResponse['message']);
           } else {
             self.displayFlash = true;
             self.flashMessage = jsonResponse['error'];
@@ -480,12 +485,12 @@ const Explore = {
   `,
   created(){
     if (!this.token){
-      this.$router.push('/login')
+      this.$router.push('/login');
       return
     }
     let self = this;
     self.updateNavbar();
-    flashMessage(self)
+    flashMessage(self);
     fetch("/api/cars", {
       method: 'GET',
       headers: {
@@ -568,6 +573,11 @@ const Explore = {
 const ViewCar = {
   name: 'ViewCar',
   template: `
+    <transition name="fade" class="mt-5">
+      <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+          {{ flashMessage }}
+      </div>
+    </transition>
     <div class="view-car-container d-flex ml-auto mr-auto">
       <section class="view-car-img-container">
         <img :src="car['photo']" id='view-car-img' class="" alt="Car Photo">
@@ -596,12 +606,18 @@ const ViewCar = {
   data() {
       return {
         car:[],
+        flashMessage: sessionStorage.getItem('flash'),
+        displayFlash: false,
+        isSuccess: false,
+        alertSuccessClass: 'alert-success',
+        alertErrorClass: 'alert-danger'
       }
   },
   created(){
     this.updateNavbar();
     let self = this;
-    self.fetchCar(self)
+    self.fetchCar(self);
+    flashMessage(self);
   },
   methods: {
     updateNavbar(){
