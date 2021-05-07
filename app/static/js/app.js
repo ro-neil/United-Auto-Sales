@@ -573,11 +573,6 @@ const Explore = {
 const ViewCar = {
   name: 'ViewCar',
   template: `
-    <transition name="fade" class="mt-5">
-      <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
-          {{ flashMessage }}
-      </div>
-    </transition>
     <div class="view-car-container d-flex ml-auto mr-auto">
       <section class="view-car-img-container">
         <img :src="car['photo']" id='view-car-img' class="" alt="Car Photo">
@@ -598,6 +593,11 @@ const ViewCar = {
         </div>
         <div class='view-car-footer d-flex justify-content-between align-items-end h-100'>
           <a href="mailto:owner@realestate.com" class="btn submit-button" id='email-owner-btn'>Email Owner</a>
+          <transition name="fade" class="mt-5 ml-auto mr-auto" id='view-car-flash'>
+            <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
+                {{ flashMessage }}
+            </div>
+          </transition>
           <heart @click=addToFavourites></heart>
         </div>
       </section>

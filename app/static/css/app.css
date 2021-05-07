@@ -336,9 +336,13 @@ textarea{
     grid-template-columns: 1fr 2fr 1.5fr 1fr;
     font-weight: 700;
 }
-
 .gray{
     color: #606060;
+}
+
+#view-car-flash{
+    width: fit-content;
+    text-align:center;
 }
 
 /* PHONE */
