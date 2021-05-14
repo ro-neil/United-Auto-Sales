@@ -298,7 +298,7 @@ const Logout = {
 const AddCar = {
   name: 'AddCar',
   template: `
-    <div v-if=token class="container col-md-8 offset-md-2" id="addCar-page">
+    <div v-if=token class="container col-md-8 offset-md-2 mb-5" id="addCar-page">
       <transition name="fade" class="mt-5">
         <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
             {{ flashMessage }}
