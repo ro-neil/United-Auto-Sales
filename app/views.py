@@ -228,7 +228,7 @@ def getCar(car_id):
     return jsonify(carObj)
 
 
-@app.route("/api/cars/<int:car_id>/remove", methods=["GET"])
+@app.route("/api/cars/<int:car_id>/remove", methods=["POST"])
 @requires_auth
 def removeCar(car_id):
     """ Deletes a specific car """
@@ -237,14 +237,14 @@ def removeCar(car_id):
     if car is None:
         return jsonify(message="Car not found")
 
-    if car.user_id == current_user.get_id():
-        path = os.path.join(app.config['CARS_FOLDER'], car.photo_name)
+    if str(car.user_id) == current_user.get_id():
+        path = os.path.join(app.config['CARS_FOLDER'], car.photo)
         os.remove(path)
         
         db.session.delete(car)
         db.session.commit()
         
-        return jsonify(message="Car Successfully Removed")
+        return jsonify(message="Car Removed Successfully")
 
     return jsonify(message="Not allowed")
 
@@ -320,17 +320,23 @@ def getFavourites(user_id):
     favourites = Favourite.query.filter_by(user_id=user_id).all()
     if favourites is None:
         return jsonify(message="Favourites not found")
-    
+    print("Before",favourites)
     data = []
     for favourite in favourites:
         car_id = obj_to_dict(favourite)['car_id']
         car = Car.query.get(car_id)
 
-        carObj = obj_to_dict(car)
-        carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
-        carObj['price'] = numberFormatter(carObj['price'])
+        # Remove car from Favourites if not found, car most likely deleted by the owner.
+        if car is None:
+            car = Favourite.query.filter_by(car_id=car_id).first()
+            Favourite.delete(car)
+            Favourite.commit()
+        else:
+            carObj = obj_to_dict(car)
+            carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"
+            carObj['price'] = numberFormatter(carObj['price'])
 
-        data.append(carObj)
+            data.append(carObj)
     return jsonify(data)
 
 

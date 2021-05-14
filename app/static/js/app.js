@@ -139,10 +139,10 @@ const Register = {
               self.displayFlash = false;
           }, 3000);
         } else {
-            self.$router.push('/login')
-            self.user_data = jsonResponse
-            sessionStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse))
-            sessionStorage.setItem('flash','Registered successfully')
+            self.$router.push('/login');
+            self.user_data = jsonResponse;
+            sessionStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse));
+            sessionStorage.setItem('flash','Registered successfully');
         }
           console.log(jsonResponse);
       })
@@ -578,7 +578,11 @@ const ViewCar = {
         <img :src="car['photo']" id='view-car-img' class="" alt="Car Photo">
       </section>
       <section class="view-car-info-container p-4 pb-3 w-100 d-flex flex-column">
-        <p class="year-make">{{car['year']}}  {{car['make']}}</p>
+        <div class="d-flex justify-content-between">
+          <p class="year-make">{{car['year']}}  {{car['make']}}</p>
+          <img v-if="String(car['user_id']) === user_id" src="../static/imgs/trash_can.svg" id="trash-can" data-toggle="modal" data-target="#ModalCenter">
+        </div>
+        
         <p class="model">{{car['model']}}</p>
         <p class="description gray">{{car['description']}}</p>
         <div class="additional-info">
@@ -591,6 +595,7 @@ const ViewCar = {
           <p class="transmission gray">Transmission</p>
           <p class="transmission value">{{car['transmission']}}</p>
         </div>
+
         <div class='view-car-footer d-flex justify-content-between align-items-end h-100'>
           <a href="mailto:owner@realestate.com" class="btn submit-button" id='email-owner-btn'>Email Owner</a>
           <transition name="fade" class="mt-5 ml-auto mr-auto" id='view-car-flash'>
@@ -602,10 +607,33 @@ const ViewCar = {
         </div>
       </section>
     </div>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="ModalLongTitle">Delete "{{car['year']}}  {{car['make']}}"</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to permanently delete this vehicle?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn no-btn" data-dismiss="modal">No</button>
+            <button type="button" class="btn yes-btn" data-dismiss="modal" @click=deleteCar>Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   `,
   data() {
       return {
-        car:[],
+        car: "",
+        user_id: sessionStorage.getItem('united_auto_sales_user'),
         flashMessage: sessionStorage.getItem('flash'),
         displayFlash: false,
         isSuccess: false,
@@ -667,6 +695,33 @@ const ViewCar = {
           setTimeout(function() { 
               self.displayFlash = false; 
           }, 3000);
+          console.log(jsonResponse)
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    },
+    deleteCar(){
+      let self = this;
+      fetch(`/api/cars/${this.$route.params.car_id}/remove`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf_token,
+            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+        },
+        credentials: 'same-origin'
+      })
+      .then(function (response) {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+      })
+      .then(function (jsonResponse) {
+          if(jsonResponse['message'] !== 'Not allowed'){
+            self.$router.push('/explore');
+            sessionStorage.setItem('flash', jsonResponse['message']);
+          }
           console.log(jsonResponse)
       })
       .catch(function (error) {

@@ -6,6 +6,7 @@
     --color-2: #E4b363;
     --color-3: #048a81;
     --body-background: #f0f0f0;
+    --red: #e63946;
 }
 
 body {
@@ -344,6 +345,19 @@ textarea{
     width: fit-content;
     text-align:center;
 }
+:is(#trash-can, #heart-container){
+    cursor:pointer;
+}
+.yes-btn{
+    background-color: var(--red);
+}
+.no-btn{
+    background-color: var(--color-2);
+}
+:is(.yes-btn, .no-btn):hover{
+    background-color: var(--color-1);
+}
+
 
 /* PHONE */
 @media only screen and (max-width: 768px) {
