@@ -320,7 +320,7 @@ def getFavourites(user_id):
     favourites = Favourite.query.filter_by(user_id=user_id).all()
     if favourites is None:
         return jsonify(message="Favourites not found")
-    print("Before",favourites)
+
     data = []
     for favourite in favourites:
         car_id = obj_to_dict(favourite)['car_id']

@@ -759,7 +759,7 @@ const ViewProfile = {
 
       <h2 class='bold'>Cars Favourited</h2>
 
-      <div class="cars">
+      <div class="cars mb-5">
         <div v-for="car in car_data" class="row row-cols-1 row-cols-md-3 g-4">
           <div class="col">
             <div class="card h-100">
