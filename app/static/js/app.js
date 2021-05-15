@@ -1,5 +1,22 @@
 /* Add your Application JavaScript */
 
+// NOTE: //
+// STORE FLASH MESSAGE AS JSON.stringify({flash: [message, isSuccess]}) // where isSuccess determines color
+
+function loginNav(){
+  document.getElementById('logged-in').classList.remove('d-none');
+  document.getElementById('logged-out').classList.add('d-none');
+}
+
+function logoutNav(){
+  document.getElementById('logged-in').classList.add('d-none');
+  document.getElementById('logged-out').classList.remove('d-none');
+}
+
+function isLoggedIn(){
+  return localStorage.getItem('united_auto_sales_token');
+}
+
 function flashMessage(obj, success=true) {
   if (obj.flashMessage){
     obj.displayFlash = true;
@@ -36,14 +53,15 @@ const Home = {
     `,
   data() {
       return {
-        token: sessionStorage.getItem('united_auto_sales_token')
+        
       }
   },
   created() {
-    if (this.token){
+    if (isLoggedIn()){
       console.log('Please logout to access the homepage.');
       this.$router.push('/explore');
-      return
+    } else {
+      logoutNav();
     }
   }
 };
@@ -58,7 +76,7 @@ const Register = {
           </div>
         </transition>
         <h1 class="font-weight-bold registration-header mt-4">Register New User</h1>
-        <form method="post" @submit.prevent="register_user" id="registrationForm" class="w-100">
+        <form method="post" @submit.prevent="register_user" id="registration-form" class="w-100 mt-3">
             <div class="form-row">  
                 <div class="form-group col-md-6 sm-padding-right">
                     <label for="username">Username</label><br>
@@ -112,9 +130,17 @@ const Register = {
       alertErrorClass: 'alert-danger'
     }
   },
+  created() {
+    if (isLoggedIn()){
+      console.log('Please logout to register an account.');
+      this.$router.push('/explore');
+    } else {
+      logoutNav();
+    }
+  },
   methods: {
     register_user() {
-      let form = document.getElementById('registrationForm');
+      let form = document.getElementById('registration-form');
       let form_data = new FormData(form);
       let self = this;
       fetch("/api/register", {
@@ -141,7 +167,7 @@ const Register = {
         } else {
             self.$router.push('/login');
             self.user_data = jsonResponse;
-            sessionStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse));
+            localStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse));
             sessionStorage.setItem('flash','Registered successfully');
         }
           console.log(jsonResponse);
@@ -157,12 +183,12 @@ const Login = {
   name: 'Login',
   template: `
     <div class="container col-md-8 offset-md-2 login-form-container center-block d-flex flex-column justify-content-center align-items-center">
-      <transition name="fade" class="mt-5">
+      <transition name="fade" class="">
         <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
             {{ flashMessage }}
         </div>
       </transition>
-      <h2 class="">Login to your account </h2>
+      <h2 class="mt-3">Login to your account </h2>
       <form method="post" @submit.prevent="login_user" id="loginForm">
         <div class="form-group">
           <label for="username">Username</label><br>
@@ -177,8 +203,13 @@ const Login = {
     </div>
   `,
   created(){
-    this.updateNavbar();
-    flashMessage(this);
+    if (isLoggedIn()){
+      console.log('You are already logged in.');
+      this.$router.push('/explore');
+    } else {
+      logoutNav();
+      flashMessage(this);
+    }
   },
   data(){
     return {
@@ -211,13 +242,12 @@ const Login = {
       .then(function (jsonResponse) {
           if (jsonResponse['token']){
             if (typeof(Storage) !== "undefined") {
-              sessionStorage.setItem('united_auto_sales_token', jsonResponse['token']);
-              sessionStorage.setItem('united_auto_sales_user', jsonResponse['user_id']);
+              localStorage.setItem('united_auto_sales_token', jsonResponse['token']);
+              localStorage.setItem('united_auto_sales_user', jsonResponse['user_id']);
             } else {
               console.log('No Web Storage support..');
             }
             self.$router.push('/explore');
-            self.updateNavbar();
             sessionStorage.setItem('flash',jsonResponse['message']);
           } else {
             self.displayFlash = true;
@@ -231,13 +261,6 @@ const Login = {
       .catch(function (error) {
           console.log(error);
       });
-    },
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      }
     }
   }
 };
@@ -247,16 +270,16 @@ const Logout = {
   template: `
   `,
   created(){
-    if (!this.token){
+    if (!isLoggedIn()){
       this.$router.push('/login')
-      return
+      return;
     }
     let self = this;
     fetch("/api/auth/logout", {
       method: 'POST',
       headers: {
           'X-CSRFToken': csrf_token,
-          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
       },
       credentials: 'same-origin'
     })
@@ -268,9 +291,8 @@ const Logout = {
     })
     .then(function (jsonResponse) {
         self.$router.push('/');
-        self.updateNavbar();
-        sessionStorage.removeItem('united_auto_sales_token');
-        sessionStorage.removeItem('united_auto_sales_user');
+        localStorage.removeItem('united_auto_sales_token');
+        localStorage.removeItem('united_auto_sales_user');
         sessionStorage.removeItem('flash');
         self.message = jsonResponse['message'];
     })
@@ -280,25 +302,17 @@ const Logout = {
   },
   data() {
       return {
-        message: '',
-        token: sessionStorage.getItem('united_auto_sales_token')
+        message: ''
       }
   },
   methods: {
-    updateNavbar(){
-      document.getElementById('logged-out').classList.remove('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.add('d-none');
-      }
-    }
   }
 };
 
 const AddCar = {
   name: 'AddCar',
   template: `
-    <div v-if=token class="container col-md-8 offset-md-2 mb-5" id="addCar-page">
+    <div class="container col-md-8 offset-md-2 mb-5" id="addCar-page">
       <transition name="fade" class="mt-5">
         <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
             {{ flashMessage }}
@@ -375,7 +389,6 @@ const AddCar = {
   `,
   data() {
       return {
-        token: sessionStorage.getItem('united_auto_sales_token'),
         flashMessage: sessionStorage.getItem('flash'),
         displayFlash: false,
         isSuccess: false,
@@ -384,12 +397,12 @@ const AddCar = {
       }
   },
   created(){
-    if (!this.token){
+    if (!isLoggedIn()){
       this.$router.push('/login')
-      return
+      return;
     }
-    this.updateNavbar();
-    flashMessage(this)
+    loginNav();
+    flashMessage(this);
   },
   methods: {
     add_car(){
@@ -401,7 +414,7 @@ const AddCar = {
           body: form_data,
           headers: {
               'X-CSRFToken': csrf_token,
-              'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+              'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
           },
           credentials: 'same-origin'
       })
@@ -421,13 +434,6 @@ const AddCar = {
       .catch(function (error) {
           console.log('Looks like there was a problem: \n', error);
       });
-    },
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      }
     }
   }
 };
@@ -435,7 +441,7 @@ const AddCar = {
 const Explore = {
   name: 'Explore',
   template: `
-    <div v-if=token class="explore px-5 mx-auto pb-5">
+    <div class="explore px-5 mx-auto pb-5">
       <transition name="fade" class="mt-5">
         <div v-if="displayFlash" v-bind:class="[isSuccess ? alertSuccessClass : alertErrorClass]" class="alert">
             {{ flashMessage }}
@@ -484,18 +490,18 @@ const Explore = {
     </div>
   `,
   created(){
-    if (!this.token){
+    if (!isLoggedIn()){
       this.$router.push('/login');
-      return
+      return;
     }
     let self = this;
-    self.updateNavbar();
+    loginNav();
     flashMessage(self);
     fetch("/api/cars", {
       method: 'GET',
       headers: {
           'X-CSRFToken': csrf_token,
-          'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+          'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
       },
       credentials: 'same-origin'
     })
@@ -517,13 +523,6 @@ const Explore = {
     });
   },
   methods: {
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      } 
-    },
     getID:function(event){
       targetId = event.currentTarget.id;
       this.$router.push(`/cars/${targetId}`)
@@ -534,7 +533,7 @@ const Explore = {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -560,7 +559,6 @@ const Explore = {
       car_data: [],
       make_searchTerm: '',
       model_searchTerm: '',
-      token: sessionStorage.getItem('united_auto_sales_token'),
       flashMessage: sessionStorage.getItem('flash'),
       displayFlash: false,
       isSuccess: false,
@@ -633,7 +631,7 @@ const ViewCar = {
   data() {
       return {
         car: "",
-        user_id: sessionStorage.getItem('united_auto_sales_user'),
+        user_id: localStorage.getItem('united_auto_sales_user'),
         flashMessage: sessionStorage.getItem('flash'),
         displayFlash: false,
         isSuccess: false,
@@ -642,25 +640,22 @@ const ViewCar = {
       }
   },
   created(){
-    this.updateNavbar();
+    if (!isLoggedIn()){
+      this.$router.push('/login');
+      return;
+    }
+    loginNav();
     let self = this;
     self.fetchCar(self);
     flashMessage(self);
   },
   methods: {
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      }
-    },
     fetchCar(self){
       fetch(`/api/cars/${this.$route.params.car_id}`, {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -669,6 +664,10 @@ const ViewCar = {
         })
       .then(function (response) {
         self.car = response;
+        if (response['message'] === "Car not found"){
+          sessionStorage.setItem('flash', response['message']); // STORE FLASH MESSAGE AS JSON.stringify({flash: [message, type]}) // type determines color
+          self.$router.push('/explore');
+        }
         console.log(response);
       })
     },
@@ -678,7 +677,7 @@ const ViewCar = {
         method: 'POST',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -707,7 +706,7 @@ const ViewCar = {
         method: 'POST',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -787,30 +786,22 @@ const ViewProfile = {
   `,
   data() {
       return {
-        token: sessionStorage.getItem('united_auto_sales_token'),
-        user_id: sessionStorage.getItem('united_auto_sales_user'),
+        user_id: localStorage.getItem('united_auto_sales_user'),
         user_data: [],
         car_data: []
       }
   },
   created(){
-    if (!this.token){
-      this.$router.push('/login')
-      return
+    if (!isLoggedIn()){
+      this.$router.push('/login');
+      return;
     }
     let self = this;
-    self.updateNavbar();
+    loginNav();
     self.fetchUser(self);
     self.fetchFavourites(self);
   },
   methods: {
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      }
-    },
     formatDate(date_joined){
       let date = (new Date(date_joined)).toDateString().split(" ");
       return `${date[1]} ${date[2]}, ${date[3]}`;
@@ -820,7 +811,7 @@ const ViewProfile = {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -843,7 +834,7 @@ const ViewProfile = {
         method: 'GET',
         headers: {
             'X-CSRFToken': csrf_token,
-            'Authorization': 'Bearer ' + sessionStorage.getItem('united_auto_sales_token')
+            'Authorization': 'Bearer ' + localStorage.getItem('united_auto_sales_token')
         },
         credentials: 'same-origin'
       })
@@ -881,18 +872,11 @@ const NotFound = {
       return {}
   },
   created(){
-    if (this.token){
-      this.updateNavbar();
+    if (isLoggedIn()){
+      loginNav();
     }
   },
   methods: {
-    updateNavbar(){
-      document.getElementById('logged-out').classList.add('d-none');
-      let navItems = document.getElementsByClassName('dynamic-link');
-      for (let element = 0; element < navItems.length; element++) {
-        navItems[element].classList.remove('d-none');
-      }
-    }
   }
 };
 
@@ -925,25 +909,22 @@ app.component('app-header', {
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item d-none dynamic-link">
+        <ul id="logged-in" class="navbar-nav w-100 d-none">
+          <li class="nav-item dynamic-link">
             <router-link class="nav-link" to="/cars/new">Add Car</router-link>
           </li>
-          <li class="nav-item d-none dynamic-link">
-          <router-link class="nav-link" to="/explore">Explore</router-link>
+          <li class="nav-item dynamic-link">
+            <router-link class="nav-link" to="/explore">Explore</router-link>
           </li>
-          <li class="nav-item d-none dynamic-link">
-          <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
+          <li class="nav-item dynamic-link">
+            <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
           </li>
-        </ul>
-
-        <ul class="navbar-nav d-none dynamic-link">
-          <li class="nav-item active">
-          <router-link class="nav-link" to="/logout">Logout</router-link>
+          <li class="nav-item active ml-auto">
+            <router-link class="nav-link" to="/logout">Logout</router-link>
           </li>
         </ul>
 
-        <ul id="logged-out" class="navbar-nav">
+        <ul id="logged-out" class="navbar-nav ml-auto">
           <li class="nav-item active">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
@@ -951,14 +932,12 @@ app.component('app-header', {
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
         </ul>
-  
       </div>
     </nav>
   `,
   data() {
     return {
-      welcome: 'Hello World! Welcome to United Auto Sales',
-      token: sessionStorage.getItem('united_auto_sales_token'),
+      welcome: 'Hello World! Welcome to United Auto Sales'
     }
   }
 });
