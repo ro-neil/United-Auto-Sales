@@ -164,10 +164,16 @@ const Register = {
           setTimeout(function() { 
               self.displayFlash = false;
           }, 3000);
+        } else if(jsonResponse['photo'][0][0] === '.' ){
+          self.displayFlash = true;
+          self.flashMessage = jsonResponse['photo'][0];
+          setTimeout(function() { 
+              self.displayFlash = false;
+          }, 3000);
         } else {
             self.$router.push('/login');
             self.user_data = jsonResponse;
-            localStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse));
+            localStorage.setItem('united_auto_sales_user', JSON.stringify(jsonResponse['id']));
             sessionStorage.setItem('flash','Registered successfully');
         }
           console.log(jsonResponse);

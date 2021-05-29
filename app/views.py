@@ -334,8 +334,8 @@ def getFavourites(user_id):
         # Remove car from Favourites if not found, car most likely deleted by the owner.
         if car is None:
             car = Favourite.query.filter_by(car_id=car_id).first()
-            Favourite.delete(car)
-            Favourite.commit()
+            db.session.delete(car)
+            db.session.commit()
         else:
             carObj = obj_to_dict(car)
             carObj['photo'] = f"{CAR_DIR}{carObj['photo']}"

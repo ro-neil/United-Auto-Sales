@@ -17,7 +17,7 @@ class RegistrationForm(FlaskForm):
     biography = TextAreaField('Biography', validators=[DataRequired()])
     photo = FileField('Upload Photo', validators=[
         FileRequired(),
-        FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'jpeg', 'png'], '.jpg, .jpeg and .png Images only!')
     ])
 
 class NewCarForm(FlaskForm):
@@ -36,6 +36,6 @@ class NewCarForm(FlaskForm):
     )
     description = TextAreaField('Description', validators=[DataRequired()])
     photo = FileField('Photo',
-        validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')]
+        validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], '.jpg, .jpeg and .png Images only!')]
     )
 
