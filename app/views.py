@@ -127,7 +127,7 @@ def login():
                 "issue": currentDate()
             }
             encoded_jwt = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
-            response = jsonify({"message": "Login Successful", 'token':encoded_jwt, 'user_id':user.id})
+            response = jsonify({"message": "Login Successful", 'token':encoded_jwt, 'user_id':user.id}) # Hash user_id before sending
             return response
         else:
             response = jsonify({'error':'Username or Password is incorrect.'})
@@ -299,16 +299,18 @@ def search():
 
 @app.route("/api/users/<int:user_id>", methods=["GET"])
 @login_required
-def getUser(user_id):
+def getUser(user_id):   # Unhash user id
     """ Get details for a specific user """
+    if str(user_id) != current_user.get_id():
+        return jsonify(message="Invalid Request")
 
     user = User.query.get(user_id)
     if user is None:
         return jsonify(message="User not found")
     
     user = obj_to_dict(user)
-    user['date_joined'] = user['date_joined'].strftime("%Y-%m-%d, %H:%M:%S") # reformat date
-    user['photo'] = f"{USER_DIR}{user['photo']}"
+    user['date_joined'] = user['date_joined'].strftime("%b %d, %Y") # reformat date
+    user['photo'] = f"{USER_DIR}{user['photo']}"    # user_directory + path_to_user_photo
     user.pop('password')
     return jsonify(user)
 
@@ -317,6 +319,9 @@ def getUser(user_id):
 @requires_auth
 def getFavourites(user_id):
     """ Get the cars favourited by a user """
+    if str(user_id) != current_user.get_id():
+        return jsonify(message="Invalid request")
+
     favourites = Favourite.query.filter_by(user_id=user_id).all()
     if favourites is None:
         return jsonify(message="Favourites not found")

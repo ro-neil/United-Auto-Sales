@@ -665,7 +665,7 @@ const ViewCar = {
       .then(function (response) {
         self.car = response;
         if (response['message'] === "Car not found"){
-          sessionStorage.setItem('flash', response['message']); // STORE FLASH MESSAGE AS JSON.stringify({flash: [message, type]}) // type determines color
+          sessionStorage.setItem('flash', response['message']);
           self.$router.push('/explore');
         }
         console.log(response);
@@ -751,7 +751,7 @@ const ViewProfile = {
                 <span class='value'>{{ user_data['location'] }}</span>
 
                 <span class="key">Joined</span>
-                <span class='value'>{{ formatDate(user_data['date_joined']) }}</span>
+                <span class='value'>{{ user_data['date_joined'] }}</span>
             </div>
           </div>
       </div>
@@ -802,10 +802,6 @@ const ViewProfile = {
     self.fetchFavourites(self);
   },
   methods: {
-    formatDate(date_joined){
-      let date = (new Date(date_joined)).toDateString().split(" ");
-      return `${date[1]} ${date[2]}, ${date[3]}`;
-    },
     fetchUser(self){
       fetch(`/api/users/${self.user_id}`, {
         method: 'GET',
@@ -822,8 +818,12 @@ const ViewProfile = {
           return response.json();
       })
       .then(function (jsonResponse) {
-          self.user_data = jsonResponse;
-          console.log(jsonResponse)
+          if (jsonResponse['message'] === "Invalid Request"){
+            self.$router.push("/explore");
+            throw Error("Bad Request!");
+          } else {
+            self.user_data = jsonResponse;
+          }
       })
       .catch(function (error) {
           console.log(error);
@@ -845,8 +845,11 @@ const ViewProfile = {
           return response.json();
       })
       .then(function (jsonResponse) {
-          self.car_data = jsonResponse;
-          console.log(jsonResponse)
+          if (jsonResponse['message'] === "Invalid Request"){
+            throw Error("Bad Request!");
+          } else {
+            self.car_data = jsonResponse;
+          }
       })
       .catch(function (error) {
           console.log(error);
@@ -917,7 +920,7 @@ app.component('app-header', {
             <router-link class="nav-link" to="/explore">Explore</router-link>
           </li>
           <li class="nav-item dynamic-link">
-            <router-link class="nav-link" to="/users/:user_id">My Profile</router-link>
+            <router-link class="nav-link" :to="user_route">My Profile</router-link>
           </li>
           <li class="nav-item active ml-auto">
             <router-link class="nav-link" to="/logout">Logout</router-link>
@@ -937,7 +940,8 @@ app.component('app-header', {
   `,
   data() {
     return {
-      welcome: 'Hello World! Welcome to United Auto Sales'
+      welcome: 'Hello World! Welcome to United Auto Sales',
+      user_route: '/users/'+localStorage.getItem('united_auto_sales_user')
     }
   }
 });
@@ -994,7 +998,6 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/cars/new', component: AddCar },
     { path: '/explore', component: Explore },
-    { path: '/explore/Login Successful', component: Explore },
     { path: '/logout', component: Logout },
     { path: '/cars/:car_id', component: ViewCar },
     { path: '/users/:user_id', component: ViewProfile },
